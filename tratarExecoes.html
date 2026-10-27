@@ -1,10 +1,12 @@
- 
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafio do Código</title>
+
+    <title>Desafio do Código Java</title>
 
     <style>
         body {
@@ -18,13 +20,13 @@
         .jogo {
             background: white;
             color: #102342;
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
             padding: 25px;
             border-radius: 15px;
         }
 
-        input, select, button {
+        input, button {
             padding: 12px;
             margin: 8px;
             border-radius: 8px;
@@ -47,6 +49,11 @@
             background: #065f46;
         }
 
+        button:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+
         .painel {
             background: #e8f4ff;
             padding: 15px;
@@ -66,252 +73,778 @@
             padding: 15px;
             border-radius: 8px;
             white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            overflow-x: auto;
+        }
+
+        .dica {
+            color: #444;
+            font-size: 14px;
+        }
+
+        .destaque {
+            color: #087f5b;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>🎮 Desafio do Código</h1>
-    <p>Aprenda JavaScript jogando!</p>
+    <h1>🎮 Desafio do Código Java</h1>
+
+    <p>Aprenda tratamento de exceções em Java jogando!</p>
 
     <div class="jogo">
 
-        <h2 id="fase">Fase 1: Divisão</h2>
+        <h2 id="fase">Fase 1: Divisão em Java</h2>
 
         <p id="desafio">
-            Digite dois números e calcule a divisão.
+            Digite dois números inteiros e calcule a divisão.
         </p>
 
         <div class="painel">
-            <h3>Seus pontos: <span id="pontos">0</span> ⭐</h3>
-            <p>Fase: <span id="numeroFase">1</span> de 4</p>
+
+            <h3>
+                Seus pontos:
+                <span id="pontos">0</span> ⭐
+            </h3>
+
+            <p>
+                Fase:
+                <span id="numeroFase">1</span> de 4
+            </p>
+
         </div>
 
-        <label for="numero1">Primeiro número:</label><br>
-        <input type="text" id="numero1" placeholder="Ex.: 10">
+        <label for="numero1">Primeiro número:</label>
+        <br>
+
+        <input
+            type="text"
+            id="numero1"
+            placeholder="Ex.: 10"
+            autocomplete="off"
+        >
 
         <br>
 
-        <label for="numero2">Segundo número:</label><br>
-        <input type="text" id="numero2" placeholder="Ex.: 2">
+        <label for="numero2">Segundo número:</label>
+        <br>
+
+        <input
+            type="text"
+            id="numero2"
+            placeholder="Ex.: 2"
+            autocomplete="off"
+        >
 
         <br>
 
-        <button onclick="jogar()">🚀 Executar código</button>
+        <button id="executar" onclick="jogar()">
+            🚀 Executar desafio
+        </button>
 
         <div class="painel">
+
             <h3>Resultado</h3>
-            <p id="mensagem">Aguardando sua resposta...</p>
+
+            <p id="mensagem">
+                Aguardando sua resposta...
+            </p>
+
         </div>
 
         <div class="painel">
-            <h3>💡 Aprenda com o código</h3>
-            <pre id="explicacao">try {
-    // Tenta executar o código
 
-} catch (erro) {
-    // Trata o erro encontrado
+            <h3>💡 Aprenda com o código Java</h3>
+
+            <p class="dica">
+                Observe a estrutura, os comentários e as exceções
+                apresentadas em cada fase.
+            </p>
+
+            <pre id="explicacao">public class DesafioJava {
+
+    public static void main(String[] args) {
+
+        try {
+            // Código que pode apresentar uma exceção.
+
+        } catch (Exception erro) {
+            // Tratamento da exceção.
+        }
+    }
 }</pre>
+
         </div>
 
-        <button id="proximo" onclick="proximaFase()" hidden>
+        <button
+            id="proximo"
+            onclick="proximaFase()"
+            hidden
+        >
             Próxima fase ➡️
         </button>
 
-        <button onclick="reiniciar()">🔄 Reiniciar jogo</button>
+        <button onclick="reiniciar()">
+            🔄 Reiniciar jogo
+        </button>
 
     </div>
 
     <script>
-        // Guarda a pontuação do aluno
+
+        // ==========================================
+        // VARIÁVEIS DO JOGO
+        // ==========================================
+
+        // Armazena a pontuação do aluno.
         let pontos = 0;
 
-        // Guarda a fase atual do jogo
+        // Armazena a fase atual.
         let faseAtual = 1;
 
-        // Impede ganhar pontos repetindo a mesma fase
+        // Impede que o aluno ganhe pontos repetidamente
+        // na mesma fase.
         let faseConcluida = false;
+
+        // Indica se todas as fases foram concluídas.
+        let jogoConcluido = false;
+
+
+        // ==========================================
+        // FUNÇÃO PRINCIPAL DO JOGO
+        // ==========================================
 
         function jogar() {
 
-            // Lê os valores digitados pelo aluno
-            let entrada1 = document.getElementById("numero1").value.trim();
-            let entrada2 = document.getElementById("numero2").value.trim();
-
-            let mensagem = document.getElementById("mensagem");
-            let explicacao = document.getElementById("explicacao");
-
-            // Inicia o tratamento de erros
-            try {
-
-                // Verifica se os campos foram preenchidos
-                if (entrada1 === "" || entrada2 === "") {
-                    throw new Error("Preencha os dois campos!");
-                }
-
-                // Converte os textos em números
-                let numero1 = Number(entrada1);
-                let numero2 = Number(entrada2);
-
-                // Verifica se os valores são números válidos
-                if (!Number.isFinite(numero1) ||
-                    !Number.isFinite(numero2)) {
-
-                    explicacao.textContent =
-                        'if (!Number.isFinite(numero1)) {\n' +
-                        '    throw new Error("Número inválido");\n' +
-                        '}';
-
-                    throw new Error("Digite apenas números válidos!");
-                }
-
-                // Verifica se o divisor é zero
-                if (numero2 === 0) {
-
-                    explicacao.textContent =
-                        'if (numero2 === 0) {\n' +
-                        '    throw new Error(\n' +
-                        '        "O divisor não pode ser zero!"\n' +
-                        '    );\n' +
-                        '}';
-
-                    throw new Error("O divisor não pode ser zero!");
-                }
-
-                // Realiza a divisão
-                let resultado = numero1 / numero2;
-
-                mensagem.textContent =
-                    "✅ Resultado: " + resultado;
-
-                explicacao.textContent =
-                    "let resultado = numero1 / numero2;\n\n" +
-                    "try {\n" +
-                    "    // A divisão foi realizada!\n" +
-                    "} catch (erro) {\n" +
-                    "    // Nenhum erro foi encontrado.\n" +
-                    "}";
-
-                // Dá pontos somente na primeira conclusão
-                if (!faseConcluida) {
-                    pontos += 10;
-                    faseConcluida = true;
-
-                    document.getElementById("pontos").textContent =
-                        pontos;
-                }
-
-                mensagem.textContent +=
-                    "\n🏆 Desafio concluído! Você ganhou 10 pontos.";
-
-                document.getElementById("proximo").hidden = false;
-
-            } catch (erro) {
-
-                // Mostra o erro sem interromper o jogo
-                mensagem.textContent = "❌ Erro: " + erro.message;
-
-                // Ensina o aluno sobre o tratamento de erros
-                explicacao.textContent =
-                    "catch (erro) {\n" +
-                    "    // O erro foi identificado!\n" +
-                    "    console.log(erro.message);\n" +
-                    "}";
-
-                document.getElementById("proximo").hidden = true;
-            }
-        }
-
-        function proximaFase() {
-
-            if (faseAtual >= 4) {
-                document.getElementById("mensagem").textContent =
-                    "🎉 Parabéns! Você concluiu todas as fases!";
-
-                document.getElementById("fase").textContent =
-                    "Jogo concluído!";
-
-                document.getElementById("desafio").textContent =
-                    "Você aprendeu a testar entradas e tratar erros.";
-
-                document.getElementById("proximo").hidden = true;
+            // Impede novas tentativas após o encerramento.
+            if (jogoConcluido || faseConcluida) {
                 return;
             }
 
-            // Avança para a próxima fase
+            // Recupera os valores digitados nos campos.
+            let entrada1 = document
+                .getElementById("numero1")
+                .value.trim();
+
+            let entrada2 = document
+                .getElementById("numero2")
+                .value.trim();
+
+            // Recupera os elementos da interface.
+            let mensagem = document.getElementById("mensagem");
+
+            let explicacao = document.getElementById("explicacao");
+
+            let proximo = document.getElementById("proximo");
+
+
+            // ==========================================
+            // FASE 2: ENTRADA INVÁLIDA
+            // ==========================================
+
+            if (faseAtual === 2) {
+
+                try {
+
+                    // Verifica se os campos foram preenchidos.
+                    if (entrada1 === "" || entrada2 === "") {
+
+                        throw new Error(
+                            "Preencha os dois campos antes de continuar."
+                        );
+
+                    }
+
+                    // Verifica se os valores representam
+                    // números inteiros válidos.
+                    if (
+                        !/^[+-]?\d+$/.test(entrada1) ||
+                        !/^[+-]?\d+$/.test(entrada2)
+                    ) {
+
+                        // Simula a exceção NumberFormatException
+                        // que seria produzida em Java por
+                        // Integer.parseInt() diante de texto inválido.
+                        throw new Error(
+                            "NumberFormatException: entrada inválida."
+                        );
+
+                    }
+
+                    // Se ambos os valores forem inteiros,
+                    // o desafio desta fase não foi realizado.
+                    mensagem.textContent =
+                        "❌ Você precisa testar uma entrada inválida.\n" +
+                        "Digite letras em pelo menos um dos campos.";
+
+                    explicacao.textContent =
+`// Em Java, podemos converter uma String em int:
+
+int numero = Integer.parseInt("ABC");
+
+// O código acima provoca:
+// NumberFormatException
+
+// A exceção pode ser tratada com try e catch.`;
+
+                    proximo.hidden = true;
+
+                } catch (erro) {
+
+                    // A entrada inválida foi identificada.
+                    mensagem.textContent =
+                        "⚠️ Entrada inválida identificada!\n" +
+                        "O jogo reconheceu o erro esperado.";
+
+                    explicacao.textContent =
+`try {
+
+    // Tenta converter um texto em inteiro.
+    int numero = Integer.parseInt("ABC");
+
+} catch (NumberFormatException erro) {
+
+    // Trata a entrada que não representa um inteiro.
+    System.out.println("Número inválido!");
+
+}`;
+
+                    concluirFase();
+
+                }
+
+                return;
+            }
+
+
+            // ==========================================
+            // FASE 3: DIVISÃO POR ZERO
+            // ==========================================
+
+            if (faseAtual === 3) {
+
+                try {
+
+                    // Verifica se os campos foram preenchidos.
+                    if (entrada1 === "" || entrada2 === "") {
+
+                        throw new Error(
+                            "Preencha os dois campos."
+                        );
+
+                    }
+
+                    // Verifica se os valores são inteiros.
+                    if (
+                        !/^[+-]?\d+$/.test(entrada1) ||
+                        !/^[+-]?\d+$/.test(entrada2)
+                    ) {
+
+                        throw new Error(
+                            "Digite somente números inteiros."
+                        );
+
+                    }
+
+                    // Converte os textos para números inteiros.
+                    let numero1 = Number(entrada1);
+                    let numero2 = Number(entrada2);
+
+                    // Verifica se os valores estão dentro
+                    // do intervalo de um inteiro Java.
+                    if (
+                        !Number.isSafeInteger(numero1) ||
+                        !Number.isSafeInteger(numero2) ||
+                        numero1 < -2147483648 ||
+                        numero1 > 2147483647 ||
+                        numero2 < -2147483648 ||
+                        numero2 > 2147483647
+                    ) {
+
+                        throw new Error(
+                            "Digite números dentro do intervalo de int em Java."
+                        );
+
+                    }
+
+                    // O desafio desta fase exige divisor zero.
+                    if (numero2 !== 0) {
+
+                        mensagem.textContent =
+                            "❌ Desafio não concluído!\n" +
+                            "Digite zero no segundo campo.";
+
+                        explicacao.textContent =
+`// Em Java, a divisão inteira por zero
+// provoca ArithmeticException.
+
+int resultado = 10 / 0;
+
+// O código acima gera uma exceção.`;
+
+                        proximo.hidden = true;
+
+                        return;
+                    }
+
+                    // O navegador não lança automaticamente
+                    // ArithmeticException como Java.
+                    // Por isso, simulamos essa exceção.
+                    throw new Error(
+                        "ArithmeticException: divisão inteira por zero."
+                    );
+
+                } catch (erro) {
+
+                    // Identifica a situação esperada na fase.
+                    if (
+                        erro.message.startsWith("ArithmeticException")
+                    ) {
+
+                        mensagem.textContent =
+                            "⚠️ Divisão por zero identificada!\n" +
+                            "Em Java, essa operação com int provoca " +
+                            "ArithmeticException.";
+
+                        explicacao.textContent =
+`try {
+
+    // Divisão de números inteiros.
+    int resultado = 10 / 0;
+
+} catch (ArithmeticException erro) {
+
+    // Trata a divisão por zero.
+    System.out.println(
+        "Não é possível dividir um inteiro por zero!"
+    );
+
+}`;
+
+                        concluirFase();
+
+                    } else {
+
+                        // Apresenta os outros erros de validação.
+                        mensagem.textContent =
+                            "❌ Erro: " + erro.message;
+
+                        explicacao.textContent =
+`// Valide as entradas antes de realizar
+// a operação matemática.
+
+try {
+
+    // Leia e valide os valores.
+
+} catch (NumberFormatException erro) {
+
+    // Trate entradas inválidas.
+
+} catch (ArithmeticException erro) {
+
+    // Trate a divisão inteira por zero.
+
+}`;
+
+                        proximo.hidden = true;
+
+                    }
+
+                }
+
+                return;
+            }
+
+
+            // ==========================================
+            // FASES 1 E 4: DIVISÃO VÁLIDA
+            // ==========================================
+
+            try {
+
+                // Verifica se os campos estão preenchidos.
+                if (entrada1 === "" || entrada2 === "") {
+
+                    throw new Error(
+                        "Preencha os dois campos!"
+                    );
+
+                }
+
+                // Verifica se as entradas são números inteiros.
+                if (
+                    !/^[+-]?\d+$/.test(entrada1) ||
+                    !/^[+-]?\d+$/.test(entrada2)
+                ) {
+
+                    explicacao.textContent =
+`// Conversão de String para int em Java.
+
+int numero = Integer.parseInt("ABC");
+
+// Uma entrada inválida provoca:
+// NumberFormatException`;
+
+                    throw new Error(
+                        "Digite somente números inteiros válidos."
+                    );
+
+                }
+
+                // Converte os valores para números.
+                let numero1 = Number(entrada1);
+                let numero2 = Number(entrada2);
+
+                // Verifica os limites do tipo int em Java.
+                if (
+                    !Number.isSafeInteger(numero1) ||
+                    !Number.isSafeInteger(numero2) ||
+                    numero1 < -2147483648 ||
+                    numero1 > 2147483647 ||
+                    numero2 < -2147483648 ||
+                    numero2 > 2147483647
+                ) {
+
+                    throw new Error(
+                        "Digite valores dentro do intervalo de int em Java."
+                    );
+
+                }
+
+                // Verifica se o divisor é zero.
+                if (numero2 === 0) {
+
+                    explicacao.textContent =
+`// Em Java, a divisão inteira por zero
+// provoca ArithmeticException.
+
+int resultado = 10 / 0;`;
+
+                    throw new Error(
+                        "O divisor não pode ser zero!"
+                    );
+
+                }
+
+                // Calcula a divisão inteira.
+                // Math.trunc simula a divisão de int em Java.
+                let resultado = Math.trunc(numero1 / numero2);
+
+                // Prepara o exemplo de código Java.
+                if (faseAtual === 4) {
+
+                    explicacao.textContent =
+`public class DesafioJava {
+
+    public static void main(String[] args) {
+
+        int numero1 = ${numero1};
+        int numero2 = ${numero2};
+
+        try {
+
+            // Realiza a divisão inteira.
+            int resultado = numero1 / numero2;
+
+            System.out.println(
+                "Resultado: " + resultado
+            );
+
+        } catch (ArithmeticException erro) {
+
+            // Trata uma possível divisão por zero.
+            System.out.println(
+                "Não é possível dividir por zero!"
+            );
+
+        } finally {
+
+            // Executa após o try/catch.
+            System.out.println(
+                "Operação finalizada."
+            );
+        }
+    }
+}`;
+
+                } else {
+
+                    explicacao.textContent =
+`// Declaração de variáveis inteiras.
+int numero1 = ${numero1};
+int numero2 = ${numero2};
+
+try {
+
+    // Realiza a divisão inteira.
+    int resultado = numero1 / numero2;
+
+    System.out.println(
+        "Resultado: " + resultado
+    );
+
+} catch (ArithmeticException erro) {
+
+    // Trata uma possível divisão por zero.
+    System.out.println(
+        "Erro na divisão!"
+    );
+
+}`;
+
+                }
+
+                // Exibe o resultado.
+                mensagem.textContent =
+                    "✅ Resultado da divisão inteira: " + resultado;
+
+                // Conclui a fase e atribui os pontos.
+                concluirFase();
+
+            } catch (erro) {
+
+                // Trata os erros de entrada e de operação.
+                mensagem.textContent =
+                    "❌ Erro: " + erro.message;
+
+                explicacao.textContent =
+`try {
+
+    // Tente executar a operação.
+
+} catch (NumberFormatException erro) {
+
+    // Trate valores inválidos.
+
+} catch (ArithmeticException erro) {
+
+    // Trate a divisão inteira por zero.
+
+}`;
+
+                proximo.hidden = true;
+
+            }
+
+        }
+
+
+        // ==========================================
+        // CONCLUSÃO DE UMA FASE
+        // ==========================================
+
+        function concluirFase() {
+
+            // Evita contabilizar a mesma fase mais de uma vez.
+            if (faseConcluida) {
+                return;
+            }
+
+            // Registra a conclusão.
+            faseConcluida = true;
+
+            // Acrescenta 10 pontos.
+            pontos += 10;
+
+            // Atualiza a pontuação na tela.
+            document.getElementById("pontos").textContent = pontos;
+
+            // Exibe a mensagem de conclusão.
+            document.getElementById("mensagem").textContent +=
+                "\n🏆 Desafio concluído! Você ganhou 10 pontos.";
+
+            // Exibe o botão para avançar.
+            document.getElementById("proximo").hidden = false;
+
+        }
+
+
+        // ==========================================
+        // PRÓXIMA FASE
+        // ==========================================
+
+        function proximaFase() {
+
+            // Verifica se o aluno concluiu todas as fases.
+            if (faseAtual >= 4) {
+
+                jogoConcluido = true;
+
+                document.getElementById("fase").textContent =
+                    "🎉 Jogo concluído!";
+
+                document.getElementById("desafio").textContent =
+                    "Parabéns! Você estudou divisão inteira, " +
+                    "NumberFormatException, ArithmeticException, " +
+                    "try, catch e finally.";
+
+                document.getElementById("mensagem").textContent =
+                    "Você concluiu todas as fases!\n" +
+                    "Pontuação final: " + pontos + " pontos.";
+
+                document.getElementById("proximo").hidden = true;
+
+                document.getElementById("executar").disabled = true;
+
+                document.getElementById("numero1").disabled = true;
+                document.getElementById("numero2").disabled = true;
+
+                document.getElementById("explicacao").textContent =
+`// CONTEÚDOS ESTUDADOS
+
+// 1. Conversão de String para int.
+// 2. NumberFormatException.
+// 3. ArithmeticException.
+// 4. Estrutura try/catch.
+// 5. Bloco finally.
+// 6. Divisão inteira em Java.
+
+// Próximo passo:
+// Implemente os exemplos no Eclipse!`;
+
+                return;
+
+            }
+
+            // Avança para a próxima fase.
             faseAtual++;
+
+            // Libera a conclusão da nova fase.
             faseConcluida = false;
 
+            // Atualiza o número da fase.
             document.getElementById("numeroFase").textContent =
                 faseAtual;
 
+            // Limpa os campos.
             document.getElementById("numero1").value = "";
             document.getElementById("numero2").value = "";
 
+            // Limpa os campos de entrada para uso.
+            document.getElementById("numero1").disabled = false;
+            document.getElementById("numero2").disabled = false;
+
+            // Esconde o botão de próxima fase.
             document.getElementById("proximo").hidden = true;
 
-            // Apresenta um novo desafio em cada fase
+            // Habilita o botão de execução.
+            document.getElementById("executar").disabled = false;
+
+
+            // Define o conteúdo da fase.
             if (faseAtual === 2) {
+
                 document.getElementById("fase").textContent =
                     "Fase 2: Entrada inválida";
 
                 document.getElementById("desafio").textContent =
-                    "Digite letras em um campo e observe o erro.";
+                    "Digite letras em pelo menos um campo e observe " +
+                    "como Java trata NumberFormatException.";
+
             } else if (faseAtual === 3) {
+
                 document.getElementById("fase").textContent =
                     "Fase 3: Divisão por zero";
 
                 document.getElementById("desafio").textContent =
-                    "Tente dividir um número por zero.";
-            } else {
+                    "Digite um número no primeiro campo e zero no segundo.";
+
+            } else if (faseAtual === 4) {
+
                 document.getElementById("fase").textContent =
                     "Fase 4: Desafio final";
 
                 document.getElementById("desafio").textContent =
-                    "Faça uma divisão válida e conclua o jogo.";
+                    "Faça uma divisão válida e estude a estrutura " +
+                    "try/catch/finally em Java.";
+
             }
 
+            // Atualiza as mensagens.
             document.getElementById("mensagem").textContent =
-                "Novo desafio! Teste o código.";
+                "Novo desafio! Leia as instruções e teste o código.";
 
+            // Apresenta um exemplo inicial de Java.
             document.getElementById("explicacao").textContent =
-                "try {\n" +
-                "    // Tente executar o código\n" +
-                "} catch (erro) {\n" +
-                "    // Descubra como tratar o erro\n" +
-                "}";
+`try {
+
+    // Tente executar o código Java.
+
+} catch (Exception erro) {
+
+    // Identifique e trate a exceção.
+
+}`;
+
         }
+
+
+        // ==========================================
+        // REINICIAR O JOGO
+        // ==========================================
 
         function reiniciar() {
 
-            // Reinicia a pontuação e a fase
+            // Reinicia as variáveis do jogo.
             pontos = 0;
             faseAtual = 1;
             faseConcluida = false;
+            jogoConcluido = false;
 
+            // Atualiza a pontuação e a fase.
             document.getElementById("pontos").textContent = pontos;
             document.getElementById("numeroFase").textContent = faseAtual;
-            document.getElementById("fase").textContent = "Fase 1: Divisão";
-            document.getElementById("desafio").textContent =
-                "Digite dois números e calcule a divisão.";
 
+            // Restaura o título e a descrição inicial.
+            document.getElementById("fase").textContent =
+                "Fase 1: Divisão em Java";
+
+            document.getElementById("desafio").textContent =
+                "Digite dois números inteiros e calcule a divisão.";
+
+            // Limpa os campos.
             document.getElementById("numero1").value = "";
             document.getElementById("numero2").value = "";
 
+            // Habilita os campos.
+            document.getElementById("numero1").disabled = false;
+            document.getElementById("numero2").disabled = false;
+
+            // Habilita o botão de execução.
+            document.getElementById("executar").disabled = false;
+
+            // Esconde o botão de avançar.
+            document.getElementById("proximo").hidden = true;
+
+            // Atualiza a mensagem.
             document.getElementById("mensagem").textContent =
                 "Jogo reiniciado! Vamos começar.";
 
-            document.getElementById("proximo").hidden = true;
-
+            // Restaura a explicação inicial.
             document.getElementById("explicacao").textContent =
-                "try {\n" +
-                "    // Tenta executar o código\n" +
-                "} catch (erro) {\n" +
-                "    // Trata o erro encontrado\n" +
-                "}";
+`public class DesafioJava {
+
+    public static void main(String[] args) {
+
+        try {
+
+            // Código que pode apresentar uma exceção.
+
+        } catch (Exception erro) {
+
+            // Tratamento da exceção.
         }
+    }
+}`;
+
+        }
+
     </script>
 
 </body>
 </html>
+```
