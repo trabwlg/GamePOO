@@ -1,19 +1,293 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game POO</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CodeQuest – Aprenda programação jogando</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{color-scheme:light;--bg:#f3f4fb;--sf:#fff;--sf2:#eceefa;--tx:#14172e;--mu:#5b6082;--pr:#6a4cff;--pr2:#22b8d6;--ok:#16a34a;--okb:#dcfce7;--er:#e11d48;--erb:#ffe4ea;--wa:#d97706;--bd:#d9dcf0;--code:#14172e;--codet:#e6e9ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0d1022;--sf:#171a35;--sf2:#20244a;--tx:#eceeff;--mu:#9aa0cc;--pr:#8f78ff;--pr2:#3ddbf5;--ok:#4ade80;--okb:#12341f;--er:#fb7185;--erb:#40131f;--wa:#fbbf24;--bd:#2d3263;--code:#0a0c1c;}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0d1022;--sf:#171a35;--sf2:#20244a;--tx:#eceeff;--mu:#9aa0cc;--pr:#8f78ff;--pr2:#3ddbf5;--ok:#4ade80;--okb:#12341f;--er:#fb7185;--erb:#40131f;--wa:#fbbf24;--bd:#2d3263;--code:#0a0c1c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 "Space Grotesk",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--sf);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--sf);border-bottom:1px solid var(--bd);display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.5px;margin-right:auto}
+.logo b{color:var(--pr)}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--bd);background:var(--sf2);border-radius:10px;padding:8px 14px;transition:transform .1s,background .15s}
+button:hover{background:var(--bd)}button:active{transform:scale(.97)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--pr2);outline-offset:1px}
+.pri{background:var(--pr);color:#fff;border-color:var(--pr);font-weight:700}.pri:hover{background:var(--pr);filter:brightness(1.1)}
+.dng{color:var(--er)}
+nav button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+main{max-width:1060px;margin:0 auto;padding:20px 16px 60px}
+h1,h2,h3{letter-spacing:-.4px;margin:.2em 0 .5em}h1{font-size:30px}h2{font-size:22px}h3{font-size:17px}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.stat{font-size:32px;font-weight:700;color:var(--pr)}.mu{color:var(--mu);font-size:14px}
+.bar{height:12px;border-radius:99px;background:var(--sf2);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pr),var(--pr2));transition:width .6s}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.sp{flex:1}
+label{display:block;font-size:14px;color:var(--mu);margin:10px 0 4px}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px 12px}
+textarea{min-height:70px;font-family:"JetBrains Mono",monospace;font-size:13px}
+pre{background:var(--code);color:var(--codet);border-radius:10px;padding:12px 14px;overflow-x:auto;font:13.5px/1.6 "JetBrains Mono",monospace;margin:8px 0;max-width:100%}
+pre.bad{border-left:5px solid var(--er)}pre.good{border-left:5px solid var(--ok)}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:99px;background:var(--sf2);border:1px solid var(--bd);margin-right:4px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;font-family:"JetBrains Mono",monospace;font-size:14px}
+.opt.sel{border-color:var(--pr);background:var(--sf2);box-shadow:inset 0 0 0 2px var(--pr)}
+.fb{border-radius:12px;padding:14px;margin-top:14px;animation:pop .35s}
+.fb.ok{background:var(--okb);border:1px solid var(--ok)}.fb.no{background:var(--erb);border:1px solid var(--er)}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+.ph{position:relative}.ph.lock{opacity:.55}
+.node{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;text-align:left;margin:6px 0}
+.done{color:var(--ok);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:8px;border-bottom:1px solid var(--bd);text-align:left}
+.wrap{overflow-x:auto}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--pr);color:#fff;padding:12px 20px;border-radius:12px;font-weight:700;z-index:20;animation:pop .4s;max-width:90%}
+.hero{text-align:center;padding:30px 0}
+.hero h1{font-size:clamp(30px,6vw,50px)}
+.hero pre{display:inline-block;text-align:left}
+.sr{position:absolute;left:-9999px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
-
-
-1. <a href="tratarExecoes.html">Tratar Exceções em JAVA</a>
-
-
-
-
-
-    
+<header><div class="logo">&lt;Code<b>Quest</b>/&gt;</div><nav id="nav"></nav></header>
+<main id="app"></main>
+<script>
+"use strict";
+/* ===== CAMADA DE DADOS (armazenamento) ===== */
+const KEY="codequest_v1";
+const hash=s=>{let h=5381;for(const c of "cq$"+s)h=((h<<5)+h+c.charCodeAt(0))|0;return String(h)};
+const seed=()=>({
+ admin:hash("admin123"),
+ cfg:{pts:{1:10,2:20,3:30},streakBonus:5,penalty:2,unlockPct:70,sound:true,daily:true},
+ langs:[{id:"java",name:"Java",on:true},{id:"js",name:"JavaScript",on:true},{id:"py",name:"Python",on:true},{id:"c",name:"C",on:true},{id:"php",name:"PHP",on:true}],
+ topics:[{id:"t1",lang:"java",name:"Tratamento de exceções"},{id:"t2",lang:"java",name:"Variáveis e tipos"},{id:"t3",lang:"js",name:"Estruturas de repetição"},{id:"t4",lang:"js",name:"Funções"},{id:"t5",lang:"py",name:"Estruturas condicionais"},{id:"t6",lang:"py",name:"Vetores e listas"},{id:"t7",lang:"c",name:"Operadores"},{id:"t8",lang:"php",name:"Variáveis e tipos"}],
+ chs:[
+ {id:"c1",lang:"java",topic:"t2",phase:1,type:"choice",title:"Tipo certo",prompt:"Qual declaração cria corretamente uma variável inteira em Java?",code:"",opts:["int idade = 25;","integer idade = 25;","idade := 25;","var int idade = 25"],ans:"1",wrong:"integer idade = 25;",fix:"int idade = 25;",explain:"Em Java o tipo primitivo inteiro se chama int. “integer” não existe como palavra reservada e “:=” não faz parte da sintaxe.",why:"int é o tipo primitivo de 32 bits para números inteiros, seguido do nome e do valor."},
+ {id:"c2",lang:"java",topic:"t1",phase:2,type:"choice",title:"Divisão por zero",prompt:"O que acontece ao executar este código?",code:"int a = 10, b = 0;\nSystem.out.println(a / b);",opts:["Imprime 0","Imprime Infinity","Lança ArithmeticException","Erro de compilação"],ans:"3",wrong:"int a = 10, b = 0;\nSystem.out.println(a / b); // ArithmeticException",fix:"try {\n  System.out.println(a / b);\n} catch (ArithmeticException e) {\n  System.out.println(\"Divisão por zero!\");\n}",explain:"Divisão inteira por zero lança ArithmeticException em tempo de execução. O código compila, mas o programa é interrompido.",why:"O bloco try executa o código de risco e o catch captura a exceção, permitindo que o programa continue."},
+ {id:"c3",lang:"js",topic:"t3",phase:1,type:"fill",title:"Contando",prompt:"Complete o laço para imprimir de 0 a 4. Digite a palavra que falta:",code:"for (let i = 0; i ___ 5; i++) {\n  console.log(i);\n}",opts:[],ans:"<",wrong:"for (let i = 0; i <= 5; i++)",fix:"for (let i = 0; i < 5; i++)",explain:"Com “<=” o laço imprimiria também o 5, executando 6 vezes.",why:"A condição i < 5 para quando i vale 5, gerando 0, 1, 2, 3 e 4."},
+ {id:"c4",lang:"js",topic:"t4",phase:2,type:"choice",title:"Retorno esquecido",prompt:"O que esta função devolve para soma(2, 3)?",code:"function soma(a, b) {\n  a + b;\n}",opts:["5","undefined","NaN","Erro de sintaxe"],ans:"2",wrong:"function soma(a, b) {\n  a + b;\n}",fix:"function soma(a, b) {\n  return a + b;\n}",explain:"Sem a palavra return, a função calcula o valor mas não o devolve, então o resultado é undefined.",why:"return envia o valor calculado para quem chamou a função."},
+ {id:"c5",lang:"py",topic:"t5",phase:1,type:"fill",title:"Senão se",prompt:"Em Python, qual palavra substitui “else if”?",code:"",opts:[],ans:"elif",wrong:"else if x > 5:",fix:"elif x > 5:",explain:"Python usa a palavra única elif. “else if” gera erro de sintaxe.",why:"elif encadeia condições sem aumentar a indentação."},
+ {id:"c6",lang:"py",topic:"t6",phase:2,type:"choice",title:"Índice da lista",prompt:"Qual é a saída?",code:"nomes = [\"Ana\", \"Bia\", \"Caio\"]\nprint(nomes[1])",opts:["Ana","Bia","Caio","IndexError"],ans:"1",wrong:"print(nomes[1])  # não é Ana",fix:"print(nomes[0])  # Ana",explain:"Índices começam em 0. A posição 1 é o segundo elemento.",why:"nomes[0] é Ana, nomes[1] é Bia e nomes[2] é Caio."},
+ {id:"c7",lang:"c",topic:"t7",phase:1,type:"choice",title:"Resto da divisão",prompt:"Qual operador retorna o resto da divisão em C?",code:"int r = 17 ? 5; // r = 2",opts:["/","%","//","mod"],ans:"1",wrong:"int r = 17 / 5; // r = 3",fix:"int r = 17 % 5; // r = 2",explain:"O operador / faz divisão inteira (3). O resto exige %.",why:"17 = 3 × 5 + 2, e o operador % devolve esse 2."},
+ {id:"c8",lang:"php",topic:"t8",phase:1,type:"fill",title:"Prefixo PHP",prompt:"Qual símbolo inicia o nome de toda variável em PHP?",code:"___nome = \"Maria\";",opts:[],ans:"$",wrong:"nome = \"Maria\";",fix:"$nome = \"Maria\";",explain:"Em PHP todas as variáveis começam com cifrão.",why:"O $ indica ao interpretador que é uma variável."}
+ ],
+ users:{},log:[]
+});
+let DB;
+try{DB=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){DB=null}
+if(!DB||!DB.chs)DB=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}};
+/* Conteúdos disponíveis: respeita conteúdo ativo e versão mínima do Java */
+const CH=lg=>DB.chs.filter(c=>{if(c.lang!==lg)return false;const t=DB.topics.find(x=>x.id===c.topic),l=DB.langs.find(x=>x.id===lg);return !(t&&(t.on===false||(t.ver&&l&&l.ver&&+t.ver>+l.ver)))});
+/* ===== TRILHA JAVA (7 níveis) ===== */
+const JPH={1:"Fundamentos",2:"Condicionais e decisões",3:"Repetições e vetores",4:"Métodos e POO",5:"Exceções, Strings e coleções",6:"Java intermediário e avançado",7:"Java profissional"};
+const JT=[["j1","Estrutura, saída e comentários",0],["j2","Variáveis, tipos primitivos e String",0],["j3","Operadores, Scanner e conversão",0],["j4","Condicionais: if, else, switch",0],["j5","Repetições: for, while, do-while",0],["j6","Vetores e matrizes",0],["j7","Classes, objetos e encapsulamento",0],["j8","Herança, polimorfismo e interfaces",0],["j9","Tratamento de exceções",0],["j10","Strings e coleções (ArrayList, HashMap)",0],["j11","Lambdas e Streams",8],["j12","Arquivos e threads",8],["j13","Records e recursos modernos",16],["j14","JDBC, testes e Spring Boot",8]];
+const JC=[
+["jc1","j1",1,"fill","Ponto de entrada","Complete o método que inicia todo programa Java:",`public static void ___(String[] args) {\n  System.out.println("Olá!");\n}`,[],"main",`public static void inicio(String[] args)`,`public static void main(String[] args)`,"A JVM procura um método chamado main para iniciar o programa. Com outro nome, a execução falha.","main é o ponto de entrada: a JVM o chama ao executar a classe."],
+["jc2","j2",1,"choice","Tipo de dado adequado","Qual tipo é mais adequado para guardar o preço R$ 19,90?","",["int","double","boolean","char"],"2",`int preco = 19.90; // não compila`,`double preco = 19.90;`,"int guarda apenas números inteiros; 19.90 tem parte decimal e o compilador rejeita.","double armazena números decimais."],
+["jc3","j3",1,"choice","Média de duas notas","O que este código imprime?",`int n1 = 7, n2 = 8;\ndouble media = (n1 + n2) / 2;\nSystem.out.println(media);`,["7.5","7.0","8.0","Erro de compilação"],"2",`double media = (n1 + n2) / 2; // 7.0`,`double media = (n1 + n2) / 2.0; // 7.5`,"(n1 + n2) e 2 são inteiros: 15 / 2 vale 7 (divisão inteira) e só depois vira 7.0.","Com 2.0 a divisão é decimal: 15 / 2.0 = 7.5."],
+["jc4","j4",2,"choice","Aprovado ou não","Complete a condição para aprovar alunos com nota 7 ou mais:",`if (nota ___ 7) {\n  System.out.println("Aprovado");\n}`,[">=","=>","=","equals"],"1",`if (nota > 7) // reprova quem tirou 7`,`if (nota >= 7)`,"Com > o aluno com nota exatamente 7 seria reprovado. = é atribuição e => não existe em Java.",">= é verdadeiro quando a nota é 7 ou maior."],
+["jc5","j4",2,"choice","Comparação de Strings","Como comparar o conteúdo de duas Strings?",`String nome = sc.nextLine();\nif (nome ___ "Ana") { }`,[`nome == "Ana"`,`nome.equals("Ana")`,`nome = "Ana"`,`nome.compare("Ana")`],"2",`if (nome == "Ana")`,`if (nome.equals("Ana"))`,"== compara referências, não o conteúdo, e pode dar false mesmo com texto igual.","equals compara os caracteres das duas Strings."],
+["jc6","j5",3,"choice","Tabuada do 2","O que este laço imprime?",`for (int i = 1; i <= 3; i++) {\n  System.out.print(2 * i + " ");\n}`,["2 4 6","2 4 6 8","1 2 3","0 2 4"],"1",`for (int i = 1; i < 3; i++) // imprime só 2 4`,`for (int i = 1; i <= 3; i++) // imprime 2 4 6`,"Com <= o laço roda para i = 1, 2 e 3. Trocar por < perderia a última volta.","2*1, 2*2 e 2*3 resultam em 2, 4 e 6."],
+["jc7","j6",3,"choice","Erro de índice","O que acontece ao executar?",`int[] v = new int[5];\nv[5] = 10;`,["Grava 10 na última posição","ArrayIndexOutOfBoundsException","Erro de compilação","O vetor cresce"],"2",`v[5] = 10; // posição inexistente`,`v[v.length - 1] = 10; // última posição (índice 4)`,"Um vetor de tamanho 5 tem índices de 0 a 4. O índice 5 está fora dos limites.","length - 1 sempre aponta para o último índice válido."],
+["jc8","j7",4,"choice","Encapsulamento","Qual alteração protege o atributo saldo contra acesso direto?",`class Conta {\n  public double saldo;\n}`,["private double saldo; com getSaldo()","static double saldo;","final double saldo;","protected void saldo;"],"1",`conta.saldo = -500; // qualquer classe altera`,`class Conta {\n  private double saldo;\n  public double getSaldo() { return saldo; }\n  public void depositar(double v) { if (v > 0) saldo += v; }\n}`,"Com public, qualquer classe pode deixar o saldo negativo, quebrando as regras do negócio.","private esconde o atributo e os métodos validam cada alteração."],
+["jc9","j8",4,"choice","Sobrecarga ou sobrescrita","Qual é um exemplo de sobrescrita (override)?","",["Dois métodos somar com parâmetros diferentes na mesma classe","Gerente redefine calcularBonus() herdado de Funcionario","Um construtor sem parâmetros","Uma classe com atributo static"],"2",`void somar(int a, int b)\nvoid somar(double a, double b) // sobrecarga`,`class Gerente extends Funcionario {\n  @Override\n  double calcularBonus() { return 1000; }\n}`,"Mesmo nome com parâmetros diferentes na mesma classe é sobrecarga.","Sobrescrita redefine na subclasse um método herdado com a mesma assinatura."],
+["jc10","j9",5,"choice","Conversão inválida","Qual é o problema neste código Java?",`int numero = Integer.parseInt("ABC");`,["Lança NumberFormatException","Retorna 0","Erro de compilação","Retorna null"],"1",`int numero = Integer.parseInt("ABC");`,`try {\n  int numero = Integer.parseInt("ABC");\n} catch (NumberFormatException erro) {\n  System.out.println("Digite um número inteiro válido.");\n}`,"Integer.parseInt() converte textos que representam inteiros. A String \"ABC\" não representa um número.","Troque \"ABC\" por \"123\": a conversão passa a funcionar e devolve 123. O catch evita que a entrada inválida derrube o programa."],
+["jc11","j9",5,"choice","Divisão por zero","O que acontece ao executar este código?",`int a = 10, b = 0;\nSystem.out.println(a / b);`,["Imprime 0","Imprime Infinity","Lança ArithmeticException","Erro de compilação"],"3",`System.out.println(a / b); // ArithmeticException`,`try {\n  System.out.println(a / b);\n} catch (ArithmeticException e) {\n  System.out.println("Divisão por zero!");\n}`,"Divisão inteira por zero lança ArithmeticException em tempo de execução. O código compila, mas o programa é interrompido.","O try executa o código de risco e o catch captura a exceção, permitindo que o programa continue."],
+["jc12","j10",5,"choice","Posição da lista","O que acontece ao executar?",`ArrayList<String> lista = new ArrayList<>();\nlista.add("Java");\nSystem.out.println(lista.get(1));`,["Imprime Java","IndexOutOfBoundsException","Imprime null","Erro de compilação"],"2",`lista.get(1) // só existe a posição 0`,`if (lista.size() > 1) System.out.println(lista.get(1));`,"A lista tem 1 elemento, então só o índice 0 é válido.","size() permite verificar o limite antes de chamar get()."],
+["jc13","j11",6,"choice","Filtrando com Streams","O que este código imprime?",`List<Integer> n = List.of(3, 6, 9);\nn.stream().filter(x -> x > 5).forEach(System.out::println);`,["3 6 9","6 9","3","Nada"],"2",`.filter(x -> x < 5) // imprimiria só 3`,`.filter(x -> x > 5) // imprime 6 e 9`,"filter mantém somente os elementos para os quais a condição é verdadeira.","x > 5 é falso para 3 e verdadeiro para 6 e 9."],
+["jc14","j12",6,"fill","Acesso simultâneo","Qual palavra-chave impede que duas threads executem este método ao mesmo tempo?",`___ void atualizar() { total++; }`,[],"synchronized",`void atualizar() { total++; } // condição de corrida`,`synchronized void atualizar() { total++; }`,"total++ não é atômico: duas threads podem ler o mesmo valor e uma atualização se perde.","synchronized permite que apenas uma thread por vez execute o método."],
+["jc15","j13",7,"choice","Records (Java 16+)","Qual declaração cria um record com nome e nota?","",["record Aluno(String nome, double nota) { }","class record Aluno(nome, nota)","record Aluno { String nome; }","data Aluno(String nome, double nota)"],"1",`class record Aluno(nome, nota)`,`record Aluno(String nome, double nota) { }`,"O record exige os tipos dos componentes e a palavra record no lugar de class.","O compilador gera construtor, acessores nome() e nota(), equals, hashCode e toString."],
+["jc16","j14",7,"choice","JDBC seguro","Qual consulta é segura contra SQL Injection?","",[`"SELECT * FROM aluno WHERE nome='" + nome + "'"`,`prepareStatement("... WHERE nome = ?") + setString(1, nome)`,`"SELECT * FROM aluno WHERE nome=" + nome`,"con.commit()"],"2",`"... WHERE nome='" + nome + "'" // nome = x' OR '1'='1`,`PreparedStatement ps = con.prepareStatement("SELECT * FROM aluno WHERE nome = ?");\nps.setString(1, nome);`,"Concatenar a entrada permite que o usuário altere o comando SQL.","O parâmetro ? é enviado como dado e nunca interpretado como comando."]
+].map(a=>({id:a[0],lang:"java",topic:a[1],phase:a[2],type:a[3],title:a[4],prompt:a[5],code:a[6],opts:a[7],ans:a[8],wrong:a[9],fix:a[10],explain:a[11],why:a[12]}));
+function migrate(){if((DB.v||1)>=2)return;
+ DB.chs=DB.chs.filter(c=>c.lang!=="java");DB.topics=DB.topics.filter(t=>t.lang!=="java");
+ DB.topics.push(...JT.map(t=>({id:t[0],lang:"java",name:t[1],ver:t[2],on:true})));DB.chs.push(...JC);
+ const l=DB.langs.find(x=>x.id==="java");if(l){l.ph=JPH;l.ver=21}
+ DB.cfg.pts={4:40,5:60,6:100,7:150,...DB.cfg.pts};DB.v=2;save()}
+migrate();
+if((DB.v||0)<3){Object.values(DB.users).forEach(u=>{u.pw=u.pw||hash("aluno123")});DB.v=3;save()}
+/* ===== REGRAS DE NEGÓCIO ===== */
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const PH={1:"Básico",2:"Intermediário",3:"Avançado",4:"Nível 4",5:"Nível 5",6:"Nível 6",7:"Nível 7"};
+const phName=(lg,p)=>((DB.langs.find(x=>x.id===lg)||{}).ph||{})[p]||PH[p];
+const lvl=xp=>Math.floor(xp/100)+1;
+const L=id=>DB.langs.find(l=>l.id===id)||{name:id};
+const T=id=>(DB.topics.find(t=>t.id===id)||{name:"-"}).name;
+const norm=s=>String(s).replace(/\s+/g,"").toLowerCase();
+const MEDALS={first:["🥇","Primeiro acerto"],s5:["🔥","5 acertos seguidos"],xp100:["⚡","100 XP"],ph:["🏆","Fase concluída"],lang:["🎓","Linguagem completa"],retry:["🔁","Aprendeu com o erro"]};
+const doneOk=(u,id)=>u.done[id]&&u.done[id].ok;
+const phaseStats=(u,lang,p)=>{const c=CH(lang).filter(x=>x.phase===p);return{n:c.length,d:c.filter(x=>doneOk(u,x.id)).length}};
+const unlocked=(u,lang,p)=>{if(p<=1)return true;const q=p-1;const s=phaseStats(u,lang,q);if(!s.n)return unlocked(u,lang,q);return s.d/s.n*100>=DB.cfg.unlockPct};
+function grade(ch,ans){if(ch.type==="choice")return String(ans)===String(Number(ch.ans)-1);return ch.ans.split("|").some(a=>norm(a)===norm(ans))}
+function award(u,ch,ok,secs,tries){
+ const rec=u.done[ch.id]||(u.done[ch.id]={ok:false,tries:0,errs:0,secs:0});
+ rec.tries++;rec.secs=secs;let pts=0,msgs=[];
+ DB.log.push({u:u.name,ch:ch.id,ok,secs,t:Date.now()});if(DB.log.length>800)DB.log.shift();
+ if(!ok){rec.errs++;u.streak=0}
+ else{
+  u.streak++;u.best=Math.max(u.best,u.streak);
+  if(!rec.ok){ // pontos só na primeira conclusão
+   pts=Math.max(1,DB.cfg.pts[ch.phase]-DB.cfg.penalty*rec.errs);
+   if(u.streak>=3)pts+=Math.min(30,DB.cfg.streakBonus*(u.streak-2));
+   rec.ok=true;u.xp+=pts;
+   if(rec.errs>0)medal(u,"retry",msgs);
+  }
+  medal(u,"first",msgs);
+  if(u.streak>=5)medal(u,"s5",msgs);
+  if(u.xp>=100)medal(u,"xp100",msgs);
+  const s=phaseStats(u,ch.lang,ch.phase);if(s.n&&s.d===s.n)medal(u,"ph",msgs);
+  const all=CH(ch.lang);if(all.every(x=>doneOk(u,x.id)))medal(u,"lang",msgs);
+ }
+ save();return{pts,msgs};
+}
+function medal(u,k,msgs){if(!u.medals.includes(k)){u.medals.push(k);msgs.push(MEDALS[k][0]+" Medalha: "+MEDALS[k][1])}}
+/* ===== SOM ===== */
+function beep(ok){if(!DB.cfg.sound)return;try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=ok?660:180;g.gain.value=.05;o.start();o.stop(a.currentTime+.15)}catch(e){}}
+function toast(m){const d=document.createElement("div");d.className="toast";d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2800)}
+/* ===== ESTADO DA INTERFACE ===== */
+let ses=null,view="login",ctx={},P={};
+const nav=(v,c={})=>{view=v;ctx=c;render();scrollTo(0,0)};
+const me=()=>DB.users[ses.name];
+/* ===== TELAS ===== */
+function render(){
+ const n=document.getElementById("nav"),a=document.getElementById("app");
+ const tabs=!ses?[]:ses.role==="admin"?[["aDash","Painel"],["aLangs","Linguagens"],["aStu","Alunos"],["aChs","Desafios"],["aCfg","Pontuação"],["aRep","Relatórios"]]:[["sHome","Trilhas"],["sRank","Ranking"],["sProf","Meu perfil"]];
+ n.innerHTML=tabs.map(t=>`<button data-a="go" data-v="${t[0]}" class="${view===t[0]?"on":""}">${t[1]}</button>`).join("")+(ses?`<button data-a="theme" aria-label="Alternar tema">◐</button><button data-a="out">Sair</button>`:`<button data-a="theme" aria-label="Alternar tema">◐</button>`);
+ a.innerHTML=(V[view]||V.login)();
+}
+const V={};
+V.login=()=>`<div class="hero"><h1>Aprenda programação errando, corrigindo e evoluindo.</h1>
+<pre>try {\n  aprender();\n} catch (erro) {\n  evoluir(erro);\n}</pre></div>
+<div class="card" style="max-width:380px;margin:0 auto"><h2>Entrar</h2><label for="un">Usuário</label><input id="un" maxlength="30" autocomplete="username" autocapitalize="none"><label for="up">Senha</label><input id="up" type="password" autocomplete="current-password"><p><button class="pri" data-a="login" style="width:100%">Entrar</button></p><p class="mu">Contas de aluno são criadas pelo professor.</p></div>`;
+let fails=0,lockUntil=0;
+V.sHome=()=>{const u=me(),l=lvl(u.xp);
+ return `<div class="card"><div class="row"><div><h1>Olá, ${esc(u.name)}</h1><span class="tag">Nível ${l}</span><span class="tag">${u.xp} XP</span><span class="tag">🔥 sequência ${u.streak}</span></div></div>
+ <p class="mu">${u.xp%100} / 100 XP para o nível ${l+1}</p><div class="bar"><i style="width:${u.xp%100}%"></i></div>
+ ${DB.cfg.daily?`<p class="mu">Missão do dia: acerte 3 desafios em sequência para ganhar bônus.</p>`:""}</div>
+ <h2>Escolha uma linguagem</h2><div class="grid">${DB.langs.filter(x=>x.on).map(x=>{const c=CH(x.id),d=c.filter(y=>doneOk(u,y.id)).length;
+ return `<button class="card" style="text-align:left" data-a="lang" data-id="${x.id}"><h3>&lt;/&gt; ${esc(x.name)}</h3><div class="mu">${d} de ${c.length} desafios</div><div class="bar"><i style="width:${c.length?d/c.length*100:0}%"></i></div></button>`}).join("")||'<p class="mu">Nenhuma linguagem liberada pelo professor ainda.</p>'}</div>`};
+V.sLang=()=>{const u=me(),lg=L(ctx.id);
+ return `<button data-a="go" data-v="sHome">Voltar</button><h1>${esc(lg.name)}</h1>`+[1,2,3,4,5,6,7].map(p=>{const s=phaseStats(u,ctx.id,p);if(!s.n)return"";const un=unlocked(u,ctx.id,p);
+ return `<div class="card ph ${un?"":"lock"}"><div class="row"><h2>Fase ${p} – ${esc(phName(ctx.id,p))}</h2><span class="sp"></span><span class="mu">${s.d}/${s.n} concluídos ${un?"":"🔒 conclua "+DB.cfg.unlockPct+"% da fase anterior"}</span></div><div class="bar"><i style="width:${s.d/s.n*100}%"></i></div>`+
+ CH(ctx.id).filter(x=>x.phase===p).map(x=>`<button class="node" ${un?"":"disabled"} data-a="play" data-id="${x.id}"><span><b>${esc(x.title)}</b> <span class="mu">${esc(T(x.topic))}</span></span><span class="${doneOk(u,x.id)?"done":"mu"}">${doneOk(u,x.id)?"✔ concluído · repetir":"jogar"}</span></button>`).join("")+`</div>`}).join("")};
+V.play=()=>{const ch=P.ch,r=P.res;
+ let h=`<button data-a="lang" data-id="${ch.lang}">Voltar</button><div class="card" style="margin-top:12px"><span class="tag">${esc(L(ch.lang).name)}</span><span class="tag">${esc(T(ch.topic))}</span><span class="tag">Fase ${ch.phase}</span><h2>${esc(ch.title)}</h2><p>${esc(ch.prompt)}</p>${ch.code?`<pre>${esc(ch.code)}</pre>`:""}`;
+ if(ch.type==="choice")h+=ch.opts.map((o,i)=>`<button class="opt ${P.sel===i?"sel":""}" data-a="sel" data-i="${i}" ${r?"disabled":""}>${esc(o)}</button>`).join("");
+ else h+=`<label for="fa">Sua resposta</label><input id="fa" autocomplete="off" ${r?"disabled":""} value="${esc(P.txt||"")}" style="font-family:'JetBrains Mono',monospace">`;
+ if(!r)h+=`<p><button class="pri" data-a="check">Verificar resposta</button></p>`;
+ if(r&&r.ok)h+=`<div class="fb ok"><h3>✔ Correto! ${r.pts?"+"+r.pts+" XP":"(prática: sem pontos extras)"}</h3><p>${esc(ch.why)}</p>${r.msgs.map(m=>`<p><b>${esc(m)}</b></p>`).join("")}<button class="pri" data-a="next">Próximo desafio</button> <button data-a="play" data-id="${ch.id}">Repetir</button></div>`;
+ if(r&&!r.ok)h+=`<div class="fb no"><h3>✘ Resposta incorreta</h3><p><b>Por quê:</b> ${esc(ch.explain)}</p><p class="mu">Código com o problema:</p><pre class="bad">${esc(ch.wrong)}</pre><p class="mu">Versão corrigida:</p><pre class="good">${esc(ch.fix)}</pre><p><b>Por que funciona:</b> ${esc(ch.why)}</p><button class="pri" data-a="retry">Tentar novamente</button></div>`;
+ return h+`</div>`};
+V.sRank=()=>{const us=Object.values(DB.users).sort((a,b)=>b.xp-a.xp);
+ return `<h1>Ranking</h1><div class="card wrap"><table><tr><th>#</th><th>Aluno</th><th>Turma</th><th>Nível</th><th>XP</th></tr>${us.map((u,i)=>`<tr><td>${["🥇","🥈","🥉"][i]||i+1}</td><td>${esc(u.name)}</td><td>${esc(u.cls)}</td><td>${lvl(u.xp)}</td><td>${u.xp}</td></tr>`).join("")}</table></div>`};
+V.sProf=()=>{const u=me(),ds=Object.entries(u.done).filter(e=>e[1].ok);
+ return `<h1>Meu perfil</h1><div class="card"><h2>Conquistas</h2>${u.medals.length?u.medals.map(m=>`<span class="tag">${MEDALS[m][0]} ${MEDALS[m][1]}</span>`).join(""):'<p class="mu">Resolva desafios para ganhar medalhas.</p>'}<p class="mu">Melhor sequência: ${u.best} · Nível ${lvl(u.xp)} · ${u.xp} XP</p></div>
+ <div class="card wrap"><h2>Histórico de fases concluídas</h2><table><tr><th>Desafio</th><th>Linguagem</th><th>Tentativas</th><th>Erros</th></tr>${ds.map(([id,r])=>{const c=DB.chs.find(x=>x.id===id);return c?`<tr><td>${esc(c.title)}</td><td>${esc(L(c.lang).name)}</td><td>${r.tries}</td><td>${r.errs}</td></tr>`:""}).join("")||'<tr><td colspan="4" class="mu">Nada concluído ainda.</td></tr>'}</table></div>`};
+/* ----- Admin ----- */
+const stu=()=>Object.values(DB.users);
+V.aDash=()=>{const lg=DB.log,ok=lg.filter(x=>x.ok).length,pct=lg.length?Math.round(ok/lg.length*100):0,avg=lg.length?Math.round(lg.reduce((s,x)=>s+x.secs,0)/lg.length):0;
+ return `<h1>Painel pedagógico</h1><div class="grid"><div class="card"><div class="stat">${stu().length}</div>alunos</div><div class="card"><div class="stat">${lg.length}</div>tentativas</div><div class="card"><div class="stat">${pct}%</div>acertos (${100-(lg.length?pct:100)}% erros)</div><div class="card"><div class="stat">${avg}s</div>tempo médio</div></div>
+ <div class="card wrap"><h2>Conteúdos mais difíceis</h2><table><tr><th>Desafio</th><th>Conteúdo</th><th>Tentativas</th><th>Erro</th></tr>${hard().map(h=>`<tr><td>${esc(h.t)}</td><td>${esc(h.c)}</td><td>${h.n}</td><td>${h.e}%</td></tr>`).join("")||'<tr><td colspan="4" class="mu">Sem dados ainda.</td></tr>'}</table></div>`};
+function hard(){const m={};DB.log.forEach(x=>{const c=DB.chs.find(y=>y.id===x.ch);if(!c)return;const r=m[c.id]||(m[c.id]={t:c.title,c:T(c.topic),n:0,er:0});r.n++;if(!x.ok)r.er++});return Object.values(m).map(r=>({...r,e:Math.round(r.er/r.n*100)})).sort((a,b)=>b.e-a.e).slice(0,6)}
+V.aStu=()=>`<h1>Alunos</h1><div class="card"><h2>Criar conta de aluno</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"><div><label for="s_n">Nome completo</label><input id="s_n" maxlength="40"></div><div><label for="s_l">Usuário de acesso</label><input id="s_l" maxlength="20" autocapitalize="none"></div><div><label for="s_p">Senha inicial</label><input id="s_p" type="text" autocomplete="off"></div><div><label for="s_t">Turma</label><input id="s_t" maxlength="20" placeholder="Ex.: DS-2026"></div></div><p><button class="pri" data-a="addS">Criar aluno</button></p></div><div class="card wrap"><h2>Contas (${Object.keys(DB.users).length})</h2><table><tr><th>Usuário</th><th>Nome</th><th>Turma</th><th></th></tr>${Object.entries(DB.users).map(([k,u])=>`<tr><td>${esc(k)}</td><td>${esc(u.name)}</td><td>${esc(u.cls)}</td><td><button data-a="pwS" data-id="${esc(k)}">Redefinir senha</button> <button class="dng" data-a="delS" data-id="${esc(k)}">Excluir</button></td></tr>`).join("")||'<tr><td colspan="4" class="mu">Nenhum aluno criado ainda.</td></tr>'}</table></div>`;
+V.aLangs=()=>`<h1>Linguagens e conteúdos</h1><div class="card"><h2>Linguagens</h2>${DB.langs.map(l=>`<div class="row" style="margin:6px 0"><label style="margin:0;display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" style="width:auto" data-a="tog" data-id="${l.id}" ${l.on?"checked":""}> ${esc(l.name)}</label><span class="sp"></span><button data-a="verL" data-id="${l.id}">Versão${l.ver?" "+l.ver:""}</button><button data-a="renL" data-id="${l.id}">Editar</button><button class="dng" data-a="delL" data-id="${l.id}">Excluir</button></div>`).join("")}
+ <div class="row"><input id="nl" placeholder="Nova linguagem (ex.: C#)" style="max-width:280px"><button class="pri" data-a="addL">Adicionar</button></div></div>
+ <div class="card"><h2>Conteúdos e comandos</h2>${DB.topics.map(t=>`<div class="row" style="margin:6px 0"><label style="margin:0;display:flex;gap:6px;align-items:center;color:var(--tx)"><input type="checkbox" style="width:auto" data-a="togT" data-id="${t.id}" ${t.on===false?"":"checked"} aria-label="Ativar conteúdo"><span class="tag">${esc(L(t.lang).name)}</span>${esc(t.name)}</label>${t.ver?`<span class="tag">versão ≥ ${t.ver}</span>`:""}<span class="sp"></span><button data-a="renT" data-id="${t.id}">Editar</button><button class="dng" data-a="delT" data-id="${t.id}">Excluir</button></div>`).join("")}
+ <div class="row"><select id="tl" style="max-width:180px">${DB.langs.map(l=>`<option value="${l.id}">${esc(l.name)}</option>`).join("")}</select><input id="tn" placeholder="Ex.: Herança e polimorfismo" style="max-width:300px"><input id="tv" type="number" min="0" placeholder="Versão mínima" style="max-width:140px" aria-label="Versão mínima"><button class="pri" data-a="addT">Adicionar</button></div></div>`;
+V.aChs=()=>{const e=ctx.edit||{lang:DB.langs[0]?.id,topic:"",phase:1,type:"choice",title:"",prompt:"",code:"",opts:[],ans:"1",wrong:"",fix:"",explain:"",why:""};
+ const ts=DB.topics.filter(t=>t.lang===e.lang);
+ return `<h1>Desafios</h1><div class="card"><h2>${e.id?"Editar":"Novo"} desafio</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+ <div><label for="f_lang">Linguagem</label><select id="f_lang" data-a="flang">${DB.langs.map(l=>`<option value="${l.id}" ${l.id===e.lang?"selected":""}>${esc(l.name)}</option>`).join("")}</select></div>
+ <div><label for="f_topic">Conteúdo</label><select id="f_topic">${ts.map(t=>`<option value="${t.id}" ${t.id===e.topic?"selected":""}>${esc(t.name)}</option>`).join("")}</select></div>
+ <div><label for="f_phase">Fase</label><select id="f_phase">${[1,2,3,4,5,6,7].map(p=>`<option value="${p}" ${p==e.phase?"selected":""}>${p} – ${esc(phName(e.lang,p))}</option>`).join("")}</select></div>
+ <div><label for="f_type">Modelo</label><select id="f_type"><option value="choice" ${e.type==="choice"?"selected":""}>Múltipla escolha</option><option value="fill" ${e.type==="fill"?"selected":""}>Resposta digitada</option></select></div></div>
+ <label for="f_title">Título</label><input id="f_title" value="${esc(e.title)}">
+ <label for="f_prompt">Enunciado</label><textarea id="f_prompt">${esc(e.prompt)}</textarea>
+ <label for="f_code">Código exibido (opcional)</label><textarea id="f_code">${esc(e.code)}</textarea>
+ <label for="f_opts">Alternativas (uma por linha – só para múltipla escolha)</label><textarea id="f_opts">${esc(e.opts.join("\n"))}</textarea>
+ <label for="f_ans">Resposta correta (nº da alternativa, ou texto esperado; use | para várias aceitas)</label><input id="f_ans" value="${esc(e.ans)}">
+ <label for="f_wrong">Código com o erro</label><textarea id="f_wrong">${esc(e.wrong)}</textarea>
+ <label for="f_fix">Código corrigido</label><textarea id="f_fix">${esc(e.fix)}</textarea>
+ <label for="f_explain">Explicação do erro</label><textarea id="f_explain">${esc(e.explain)}</textarea>
+ <label for="f_why">Por que a solução correta funciona</label><textarea id="f_why">${esc(e.why)}</textarea>
+ <p><button class="pri" data-a="saveC" data-id="${e.id||""}">Salvar desafio</button> ${e.id?'<button data-a="go" data-v="aChs">Cancelar</button>':""}</p></div>
+ <div class="card wrap"><h2>Desafios cadastrados (${DB.chs.length})</h2><table><tr><th>Título</th><th>Linguagem</th><th>Fase</th><th></th></tr>${DB.chs.map(c=>`<tr><td>${esc(c.title)}</td><td>${esc(L(c.lang).name)}</td><td>${esc(phName(c.lang,c.phase))}</td><td><button data-a="edC" data-id="${c.id}">Editar</button> <button class="dng" data-a="delC" data-id="${c.id}">Excluir</button></td></tr>`).join("")}</table></div>`};
+V.aCfg=()=>{const c=DB.cfg;return `<h1>Pontuação e regras</h1><div class="card"><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+ ${[1,2,3,4,5,6,7].map(p=>`<div><label for="c_p${p}">Pontos – fase ${p}</label><input id="c_p${p}" type="number" min="0" max="500" value="${c.pts[p]}"></div>`).join("")}
+ <div><label for="c_sb">Bônus por sequência (≥3)</label><input id="c_sb" type="number" min="0" max="50" value="${c.streakBonus}"></div>
+ <div><label for="c_pe">Penalidade por erro</label><input id="c_pe" type="number" min="0" max="50" value="${c.penalty}"></div>
+ <div><label for="c_un">% para liberar a próxima fase</label><input id="c_un" type="number" min="0" max="100" value="${c.unlockPct}"></div></div>
+ <label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="c_so" style="width:auto" ${c.sound?"checked":""}> Efeitos sonoros</label>
+ <label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="c_da" style="width:auto" ${c.daily?"checked":""}> Missão diária</label>
+ <label for="c_pw">Nova senha do administrador (deixe vazio para manter)</label><input id="c_pw" type="password" autocomplete="new-password">
+ <p class="mu">Regra anti-abuso: cada desafio pontua apenas na primeira conclusão; repetições servem para praticar. Erros reduzem os pontos dessa primeira conclusão.</p>
+ <button class="pri" data-a="saveCfg">Salvar configurações</button> <button class="dng" data-a="reset">Restaurar dados de exemplo</button></div>`};
+V.aRep=()=>`<h1>Relatórios por aluno</h1><div class="card wrap"><table><tr><th>Aluno</th><th>Turma</th><th>Nível</th><th>XP</th><th>Concluídos</th><th>Acertos</th><th>Tempo médio</th></tr>${stu().map(u=>{const l=DB.log.filter(x=>x.u===u.name),a=l.filter(x=>x.ok).length;return `<tr><td>${esc(u.name)}</td><td>${esc(u.cls)}</td><td>${lvl(u.xp)}</td><td>${u.xp}</td><td>${Object.values(u.done).filter(d=>d.ok).length}/${DB.chs.length}</td><td>${l.length?Math.round(a/l.length*100):0}%</td><td>${l.length?Math.round(l.reduce((s,x)=>s+x.secs,0)/l.length):0}s</td></tr>`}).join("")||'<tr><td colspan="7" class="mu">Nenhum aluno cadastrado.</td></tr>'}</table></div>
+<div class="card wrap"><h2>Histórico recente</h2><table><tr><th>Aluno</th><th>Desafio</th><th>Resultado</th><th>Tempo</th></tr>${DB.log.slice(-12).reverse().map(x=>`<tr><td>${esc(x.u)}</td><td>${esc((DB.chs.find(c=>c.id===x.ch)||{title:"(removido)"}).title)}</td><td>${x.ok?"✔":"✘"}</td><td>${x.secs}s</td></tr>`).join("")}</table></div>`;
+/* ===== AÇÕES ===== */
+const $=id=>document.getElementById(id);
+const nextId=p=>p+Date.now().toString(36)+Math.floor(Math.random()*99);
+const A={
+ go:d=>nav(d.v),
+ theme:()=>{const r=document.documentElement,dk=matchMedia("(prefers-color-scheme:dark)").matches,cur=r.dataset.theme||(dk?"dark":"light");r.dataset.theme=cur==="dark"?"light":"dark"},
+ out:()=>{ses=null;nav("login")},
+ login:()=>{if(Date.now()<lockUntil)return toast("Muitas tentativas. Aguarde alguns segundos.");
+  const n=$("un").value.trim().toLowerCase(),p=hash($("up").value);
+  if(n==="admin"&&p===DB.admin){fails=0;ses={role:"admin"};return nav("aDash")}
+  const k=Object.keys(DB.users).find(x=>x.toLowerCase()===n);
+  if(k&&n!=="admin"&&DB.users[k].pw===p){fails=0;ses={role:"stu",name:k};return nav("sHome")}
+  if(++fails>=5){lockUntil=Date.now()+30000;fails=0}
+  toast("Usuário ou senha incorretos.")},
+ addS:()=>{const nm=$("s_n").value.trim().slice(0,40),lg=$("s_l").value.trim(),pw=$("s_p").value,cl=$("s_t").value.trim().slice(0,20)||"-";
+  if(nm.length<2)return toast("Informe o nome do aluno.");
+  if(!/^[a-zA-Z0-9._-]{3,20}$/.test(lg)||lg.toLowerCase()==="admin")return toast("Usuário: 3 a 20 caracteres (letras, números, . _ -).");
+  if(Object.keys(DB.users).some(k=>k.toLowerCase()===lg.toLowerCase()))return toast("Esse usuário já existe.");
+  if(pw.length<6)return toast("A senha precisa ter ao menos 6 caracteres.");
+  DB.users[lg]={name:nm,cls:cl,pw:hash(pw),xp:0,streak:0,best:0,done:{},medals:[]};save();toast("Aluno criado.");render()},
+ pwS:d=>{const p=prompt("Nova senha (mínimo 6 caracteres):");if(p===null)return;if(p.length<6)return toast("Senha muito curta.");DB.users[d.id].pw=hash(p);save();toast("Senha redefinida.")},
+ delS:d=>{if(!confirm("Excluir este aluno e todo o progresso dele?"))return;delete DB.users[d.id];save();render()},
+ lang:d=>nav("sLang",{id:d.id}),
+ play:d=>{const ch=DB.chs.find(c=>c.id===d.id);P={ch,sel:null,txt:"",res:null,t0:Date.now()};nav("play")},
+ sel:d=>{P.sel=+d.i;render()},
+ check:()=>{const ch=P.ch,ans=ch.type==="choice"?P.sel:($("fa").value.trim());if(ans===null||ans===""){return toast("Escolha ou digite uma resposta.")}
+  P.txt=ans;const ok=grade(ch,ans),secs=Math.round((Date.now()-P.t0)/1000),r=award(me(),ch,ok,secs);P.res={ok,...r};beep(ok);render();if(r.msgs.length)toast(r.msgs[0])},
+ retry:()=>{P.res=null;P.sel=null;P.txt="";P.t0=Date.now();render()},
+ next:()=>{const l=CH(P.ch.lang).filter(c=>unlocked(me(),c.lang,c.phase)&&!doneOk(me(),c.id));if(l.length)A.play({id:l[0].id});else{toast("Trilha concluída! 🎉");nav("sLang",{id:P.ch.lang})}},
+ togT:d=>{const t=DB.topics.find(x=>x.id===d.id);t.on=t.on===false;save()},
+ verL:d=>{const l=DB.langs.find(x=>x.id===d.id),v=prompt("Versão usada no curso (ex.: 17). Conteúdos que exigem versão maior ficam ocultos. Use 0 para sem limite:",l.ver||0);if(v!==null){l.ver=Math.max(0,parseInt(v)||0);save();render()}},
+ tog:d=>{const l=DB.langs.find(x=>x.id===d.id);l.on=!l.on;save()},
+ addL:()=>{const n=$("nl").value.trim().slice(0,30);if(!n)return toast("Digite o nome.");DB.langs.push({id:nextId("l"),name:n,on:true});save();render()},
+ renL:d=>{const l=DB.langs.find(x=>x.id===d.id),n=prompt("Novo nome:",l.name);if(n&&n.trim()){l.name=n.trim().slice(0,30);save();render()}},
+ delL:d=>{if(!confirm("Excluir linguagem e seus conteúdos e desafios?"))return;DB.langs=DB.langs.filter(x=>x.id!==d.id);DB.topics=DB.topics.filter(x=>x.lang!==d.id);DB.chs=DB.chs.filter(x=>x.lang!==d.id);save();render()},
+ addT:()=>{const n=$("tn").value.trim().slice(0,60);if(!n||!$("tl").value)return toast("Informe linguagem e conteúdo.");DB.topics.push({id:nextId("t"),lang:$("tl").value,name:n,ver:Math.max(0,parseInt($("tv").value)||0),on:true});save();render()},
+ renT:d=>{const t=DB.topics.find(x=>x.id===d.id),n=prompt("Novo nome:",t.name);if(n&&n.trim()){t.name=n.trim().slice(0,60);save();render()}},
+ delT:d=>{if(!confirm("Excluir conteúdo e desafios ligados a ele?"))return;DB.topics=DB.topics.filter(x=>x.id!==d.id);DB.chs=DB.chs.filter(x=>x.topic!==d.id);save();render()},
+ flang:()=>{ctx.edit={...(ctx.edit||{}),...readC(),lang:$("f_lang").value,topic:""};render()},
+ edC:d=>nav("aChs",{edit:{...DB.chs.find(c=>c.id===d.id)}}),
+ delC:d=>{if(confirm("Excluir este desafio?")){DB.chs=DB.chs.filter(c=>c.id!==d.id);save();render()}},
+ saveC:d=>{const c=readC();c.id=d.id||nextId("c");
+  if(!c.title||!c.prompt||!c.lang||!c.topic||!c.ans)return toast("Preencha linguagem, conteúdo, título, enunciado e resposta.");
+  if(c.type==="choice"){if(c.opts.length<2)return toast("Informe ao menos 2 alternativas.");const n=Number(c.ans);if(!(n>=1&&n<=c.opts.length))return toast("A resposta deve ser o nº de uma alternativa.")}
+  if(!c.explain||!c.why)return toast("Inclua as explicações pedagógicas.");
+  const i=DB.chs.findIndex(x=>x.id===c.id);if(i>=0)DB.chs[i]=c;else DB.chs.push(c);save();toast("Desafio salvo.");nav("aChs")},
+ saveCfg:()=>{const n=(id,max)=>Math.max(0,Math.min(max,parseInt($(id).value)||0));
+  DB.cfg={pts:Object.fromEntries([1,2,3,4,5,6,7].map(p=>[p,n("c_p"+p,500)])),streakBonus:n("c_sb",50),penalty:n("c_pe",50),unlockPct:n("c_un",100),sound:$("c_so").checked,daily:$("c_da").checked};
+  if($("c_pw").value){if($("c_pw").value.length<6)return toast("Senha com ao menos 6 caracteres.");DB.admin=hash($("c_pw").value)}save();toast("Configurações salvas.");render()},
+ reset:()=>{if(confirm("Apagar TODOS os dados, inclusive alunos?")){DB=seed();migrate();render()}}
+};
+function readC(){const g=id=>($(id)?$(id).value:"");return{lang:g("f_lang"),topic:g("f_topic"),phase:+g("f_phase")||1,type:g("f_type"),title:g("f_title").trim(),prompt:g("f_prompt").trim(),code:g("f_code"),opts:g("f_opts").split("\n").map(s=>s.trim()).filter(Boolean),ans:g("f_ans").trim(),wrong:g("f_wrong"),fix:g("f_fix"),explain:g("f_explain").trim(),why:g("f_why").trim()}}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-a]");if(!t||t.tagName==="SELECT"||(t.type==="checkbox"&&e.type==="click"&&!/^tog/.test(t.dataset.a)))return;if(t.dataset.a==="flang")return;A[t.dataset.a]&&A[t.dataset.a](t.dataset)});
+document.addEventListener("change",e=>{const t=e.target;if(t.dataset&&t.dataset.a==="flang")A.flang()});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="fa"&&!P.res)A.check();if(e.key==="Enter"&&(e.target.id==="up"||e.target.id==="un"))A.login()});
+render();
+</script>
 </body>
 </html>
