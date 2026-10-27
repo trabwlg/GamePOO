@@ -1,0 +1,317 @@
+ 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio do Código</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #102342;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .jogo {
+            background: white;
+            color: #102342;
+            max-width: 600px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        input, select, button {
+            padding: 12px;
+            margin: 8px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input {
+            width: 75%;
+            border: 1px solid #aaa;
+        }
+
+        button {
+            background: #087f5b;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #065f46;
+        }
+
+        .painel {
+            background: #e8f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        #mensagem {
+            font-weight: bold;
+            white-space: pre-line;
+        }
+
+        pre {
+            text-align: left;
+            background: #102342;
+            color: #a7f3d0;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🎮 Desafio do Código</h1>
+    <p>Aprenda JavaScript jogando!</p>
+
+    <div class="jogo">
+
+        <h2 id="fase">Fase 1: Divisão</h2>
+
+        <p id="desafio">
+            Digite dois números e calcule a divisão.
+        </p>
+
+        <div class="painel">
+            <h3>Seus pontos: <span id="pontos">0</span> ⭐</h3>
+            <p>Fase: <span id="numeroFase">1</span> de 4</p>
+        </div>
+
+        <label for="numero1">Primeiro número:</label><br>
+        <input type="text" id="numero1" placeholder="Ex.: 10">
+
+        <br>
+
+        <label for="numero2">Segundo número:</label><br>
+        <input type="text" id="numero2" placeholder="Ex.: 2">
+
+        <br>
+
+        <button onclick="jogar()">🚀 Executar código</button>
+
+        <div class="painel">
+            <h3>Resultado</h3>
+            <p id="mensagem">Aguardando sua resposta...</p>
+        </div>
+
+        <div class="painel">
+            <h3>💡 Aprenda com o código</h3>
+            <pre id="explicacao">try {
+    // Tenta executar o código
+
+} catch (erro) {
+    // Trata o erro encontrado
+}</pre>
+        </div>
+
+        <button id="proximo" onclick="proximaFase()" hidden>
+            Próxima fase ➡️
+        </button>
+
+        <button onclick="reiniciar()">🔄 Reiniciar jogo</button>
+
+    </div>
+
+    <script>
+        // Guarda a pontuação do aluno
+        let pontos = 0;
+
+        // Guarda a fase atual do jogo
+        let faseAtual = 1;
+
+        // Impede ganhar pontos repetindo a mesma fase
+        let faseConcluida = false;
+
+        function jogar() {
+
+            // Lê os valores digitados pelo aluno
+            let entrada1 = document.getElementById("numero1").value.trim();
+            let entrada2 = document.getElementById("numero2").value.trim();
+
+            let mensagem = document.getElementById("mensagem");
+            let explicacao = document.getElementById("explicacao");
+
+            // Inicia o tratamento de erros
+            try {
+
+                // Verifica se os campos foram preenchidos
+                if (entrada1 === "" || entrada2 === "") {
+                    throw new Error("Preencha os dois campos!");
+                }
+
+                // Converte os textos em números
+                let numero1 = Number(entrada1);
+                let numero2 = Number(entrada2);
+
+                // Verifica se os valores são números válidos
+                if (!Number.isFinite(numero1) ||
+                    !Number.isFinite(numero2)) {
+
+                    explicacao.textContent =
+                        'if (!Number.isFinite(numero1)) {\n' +
+                        '    throw new Error("Número inválido");\n' +
+                        '}';
+
+                    throw new Error("Digite apenas números válidos!");
+                }
+
+                // Verifica se o divisor é zero
+                if (numero2 === 0) {
+
+                    explicacao.textContent =
+                        'if (numero2 === 0) {\n' +
+                        '    throw new Error(\n' +
+                        '        "O divisor não pode ser zero!"\n' +
+                        '    );\n' +
+                        '}';
+
+                    throw new Error("O divisor não pode ser zero!");
+                }
+
+                // Realiza a divisão
+                let resultado = numero1 / numero2;
+
+                mensagem.textContent =
+                    "✅ Resultado: " + resultado;
+
+                explicacao.textContent =
+                    "let resultado = numero1 / numero2;\n\n" +
+                    "try {\n" +
+                    "    // A divisão foi realizada!\n" +
+                    "} catch (erro) {\n" +
+                    "    // Nenhum erro foi encontrado.\n" +
+                    "}";
+
+                // Dá pontos somente na primeira conclusão
+                if (!faseConcluida) {
+                    pontos += 10;
+                    faseConcluida = true;
+
+                    document.getElementById("pontos").textContent =
+                        pontos;
+                }
+
+                mensagem.textContent +=
+                    "\n🏆 Desafio concluído! Você ganhou 10 pontos.";
+
+                document.getElementById("proximo").hidden = false;
+
+            } catch (erro) {
+
+                // Mostra o erro sem interromper o jogo
+                mensagem.textContent = "❌ Erro: " + erro.message;
+
+                // Ensina o aluno sobre o tratamento de erros
+                explicacao.textContent =
+                    "catch (erro) {\n" +
+                    "    // O erro foi identificado!\n" +
+                    "    console.log(erro.message);\n" +
+                    "}";
+
+                document.getElementById("proximo").hidden = true;
+            }
+        }
+
+        function proximaFase() {
+
+            if (faseAtual >= 4) {
+                document.getElementById("mensagem").textContent =
+                    "🎉 Parabéns! Você concluiu todas as fases!";
+
+                document.getElementById("fase").textContent =
+                    "Jogo concluído!";
+
+                document.getElementById("desafio").textContent =
+                    "Você aprendeu a testar entradas e tratar erros.";
+
+                document.getElementById("proximo").hidden = true;
+                return;
+            }
+
+            // Avança para a próxima fase
+            faseAtual++;
+            faseConcluida = false;
+
+            document.getElementById("numeroFase").textContent =
+                faseAtual;
+
+            document.getElementById("numero1").value = "";
+            document.getElementById("numero2").value = "";
+
+            document.getElementById("proximo").hidden = true;
+
+            // Apresenta um novo desafio em cada fase
+            if (faseAtual === 2) {
+                document.getElementById("fase").textContent =
+                    "Fase 2: Entrada inválida";
+
+                document.getElementById("desafio").textContent =
+                    "Digite letras em um campo e observe o erro.";
+            } else if (faseAtual === 3) {
+                document.getElementById("fase").textContent =
+                    "Fase 3: Divisão por zero";
+
+                document.getElementById("desafio").textContent =
+                    "Tente dividir um número por zero.";
+            } else {
+                document.getElementById("fase").textContent =
+                    "Fase 4: Desafio final";
+
+                document.getElementById("desafio").textContent =
+                    "Faça uma divisão válida e conclua o jogo.";
+            }
+
+            document.getElementById("mensagem").textContent =
+                "Novo desafio! Teste o código.";
+
+            document.getElementById("explicacao").textContent =
+                "try {\n" +
+                "    // Tente executar o código\n" +
+                "} catch (erro) {\n" +
+                "    // Descubra como tratar o erro\n" +
+                "}";
+        }
+
+        function reiniciar() {
+
+            // Reinicia a pontuação e a fase
+            pontos = 0;
+            faseAtual = 1;
+            faseConcluida = false;
+
+            document.getElementById("pontos").textContent = pontos;
+            document.getElementById("numeroFase").textContent = faseAtual;
+            document.getElementById("fase").textContent = "Fase 1: Divisão";
+            document.getElementById("desafio").textContent =
+                "Digite dois números e calcule a divisão.";
+
+            document.getElementById("numero1").value = "";
+            document.getElementById("numero2").value = "";
+
+            document.getElementById("mensagem").textContent =
+                "Jogo reiniciado! Vamos começar.";
+
+            document.getElementById("proximo").hidden = true;
+
+            document.getElementById("explicacao").textContent =
+                "try {\n" +
+                "    // Tenta executar o código\n" +
+                "} catch (erro) {\n" +
+                "    // Trata o erro encontrado\n" +
+                "}";
+        }
+    </script>
+
+</body>
+</html>
