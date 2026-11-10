@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula Interativa: Enums em Java</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        java: {
+                            orange: '#f89820',
+                            red: '#5382a1',
+                            dark: '#1e1e1e',
+                            card: '#252526',
+                            border: '#3c3c3c'
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                        'bounce-short': 'bounceShort 0.5s ease-in-out',
+                        'fade-in': 'fadeIn 0.4s ease-out forwards'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(248, 152, 32, 0.4)' },
+                            '50%': { boxShadow: '0 0 25px rgba(248, 152, 32, 0.8)' }
+                        },
+                        bounceShort: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: 0, transform: 'translateY(8px)' },
+                            'to': { opacity: 1, transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        code, pre, .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        .code-keyword { color: #f43f5e; font-weight: 600; }
+        .code-type { color: #38bdf8; font-weight: 600; }
+        .code-string { color: #4ade80; }
+        .code-number { color: #fbbf24; }
+        .code-comment { color: #94a3b8; font-style: italic; }
+        .code-method { color: #a78bfa; font-weight: 500; }
+        .code-annotation { color: #f472b6; }
+        .code-line { transition: background-color 0.2s ease; }
+        .code-line.active { background-color: rgba(248, 152, 32, 0.25); border-left: 3px solid #f89820; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-slate-900">
+
+    <!-- Header / Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 lg:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/30">
+                    <i class="fa-brands fa-java text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-orange-300 to-amber-200">
+                        Dominando ENUM em Java
+                    </h1>
+                    <p class="text-xs text-slate-400">Estudo de Caso Prático: Sistema de Notas Escolares</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex flex-wrap justify-center gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs md:text-sm">
+                <button onclick="switchTab('conceito')" id="tab-conceito" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium transition-all duration-200 bg-amber-500 text-slate-950 shadow">
+                    <i class="fa-solid fa-book-open mr-1.5"></i>1. Conceito
+                </button>
+                <button onclick="switchTab('enum-code')" id="tab-enum-code" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all duration-200">
+                    <i class="fa-solid fa-code mr-1.5"></i>2. SituacaoAluno.java
+                </button>
+                <button onclick="switchTab('main-code')" id="tab-main-code" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all duration-200">
+                    <i class="fa-solid fa-laptop-code mr-1.5"></i>3. Escola.java
+                </button>
+                <button onclick="switchTab('simulator')" id="tab-simulator" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all duration-200">
+                    <i class="fa-solid fa-play mr-1.5"></i>4. Simulador Vivo
+                </button>
+                <button onclick="switchTab('resumo')" id="tab-resumo" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all duration-200">
+                    <i class="fa-solid fa-star mr-1.5"></i>5. Vantagens
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- TAB 1: CONCEITO -->
+        <section id="sec-conceito" class="tab-content space-y-6 animate-fade-in">
+            <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 rounded-2xl p-6 md:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-amber-500 pointer-events-none">
+                    <i class="fa-brands fa-java text-[220px]"></i>
+                </div>
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-lightbulb mr-2"></i>Conceito Fundamental
+                    </span>
+                    <h2 class="text-3xl font-extrabold text-white tracking-tight">O que é um <span class="text-amber-400">Enum</span> em Java?</h2>
+                    <p class="text-slate-300 leading-relaxed text-base">
+                        Um **Enum** (Abreviação para *Enumeration*) é um tipo especial de classe em Java utilizado para definir um **conjunto fixo e imutável de constantes relativas a um determinado domínio**.
+                    </p>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        No nosso exemplo escolar, um aluno não pode ter um estado arbitrário (como <code class="text-amber-300">"QUASE_PASSOU"</code> ou um número aleatório <code class="text-amber-300">99</code>). A situação é estritamente delimitada em apenas 3 opções válidas:
+                    </p>
+                </div>
+            </div>
+
+            <!-- Enum Constants Visual Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Card APROVADO -->
+                <div class="bg-slate-900 rounded-2xl p-6 border border-emerald-500/30 hover:border-emerald-500/60 transition-all duration-300 group shadow-lg hover:-translate-y-1">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </span>
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800">
+                            Média &ge; 7.0
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-bold text-emerald-400 font-mono mb-2">APROVADO</h3>
+                    <p class="text-xs text-slate-400 mb-4">"Aluno aprovado com sucesso! Boas férias."</p>
+                    <div class="text-xs font-semibold text-emerald-500/80 bg-emerald-950/50 p-2.5 rounded-lg border border-emerald-900/50">
+                        <i class="fa-solid fa-certificate mr-1.5"></i> Ação: Emitir Certificado
+                    </div>
+                </div>
+
+                <!-- Card RECUPERACAO -->
+                <div class="bg-slate-900 rounded-2xl p-6 border border-amber-500/30 hover:border-amber-500/60 transition-all duration-300 group shadow-lg hover:-translate-y-1">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </span>
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-amber-950 text-amber-400 border border-amber-800">
+                            4.0 &le; Média &lt; 7.0
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-bold text-amber-400 font-mono mb-2">RECUPERACAO</h3>
+                    <p class="text-xs text-slate-400 mb-4">"Aluno em recuperação. Necessário realizar nova avaliação."</p>
+                    <div class="text-xs font-semibold text-amber-500/80 bg-amber-950/50 p-2.5 rounded-lg border border-amber-900/50">
+                        <i class="fa-solid fa-calendar-days mr-1.5"></i> Ação: Prova Substitutiva
+                    </div>
+                </div>
+
+                <!-- Card REPROVADO -->
+                <div class="bg-slate-900 rounded-2xl p-6 border border-rose-500/30 hover:border-rose-500/60 transition-all duration-300 group shadow-lg hover:-translate-y-1">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </span>
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-rose-950 text-rose-400 border border-rose-800">
+                            Média &lt; 4.0
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-bold text-rose-400 font-mono mb-2">REPROVADO</h3>
+                    <p class="text-xs text-slate-400 mb-4">"Aluno reprovado por média insuficiente."</p>
+                    <div class="text-xs font-semibold text-rose-500/80 bg-rose-950/50 p-2.5 rounded-lg border border-rose-900/50">
+                        <i class="fa-solid fa-user-plus mr-1.5"></i> Ação: Matrícula em Dependência
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Diagram -->
+            <div class="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-diagram-project text-amber-400"></i>
+                    Anatomia de um Enum Avançado em Java
+                </h3>
+                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-around gap-6">
+                    <div class="flex flex-col items-center text-center p-4 rounded-xl bg-slate-900 border border-slate-800 w-full md:w-1/4">
+                        <i class="fa-solid fa-cube text-2xl text-amber-400 mb-2"></i>
+                        <span class="text-xs font-bold text-slate-200">Constantes Pré-definidas</span>
+                        <span class="text-[11px] text-slate-400 mt-1">APROVADO, RECUPERACAO, REPROVADO</span>
+                    </div>
+                    <i class="fa-solid fa-plus text-slate-600 hidden md:block"></i>
+                    <div class="flex flex-col items-center text-center p-4 rounded-xl bg-slate-900 border border-slate-800 w-full md:w-1/4">
+                        <i class="fa-solid fa-database text-2xl text-sky-400 mb-2"></i>
+                        <span class="text-xs font-bold text-slate-200">Campos/Atributos</span>
+                        <span class="text-[11px] text-slate-400 mt-1">private final String mensagem;</span>
+                    </div>
+                    <i class="fa-solid fa-plus text-slate-600 hidden md:block"></i>
+                    <div class="flex flex-col items-center text-center p-4 rounded-xl bg-slate-900 border border-slate-800 w-full md:w-1/4">
+                        <i class="fa-solid fa-gears text-2xl text-emerald-400 mb-2"></i>
+                        <span class="text-xs font-bold text-slate-200">Métodos Próprios</span>
+                        <span class="text-[11px] text-slate-400 mt-1">avaliarNota(double media)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: ENUM CODE (SituacaoAluno.java) -->
+        <section id="sec-enum-code" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Code Viewer (8 cols) -->
+                <div class="lg:col-span-7 bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden flex flex-col">
+                    <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                            <span class="ml-2 text-xs font-mono font-medium text-slate-400">Enum/SituacaoAluno.java</span>
+                        </div>
+                        <span class="text-[11px] font-mono text-amber-400 bg-amber-950/60 border border-amber-800 px-2 py-0.5 rounded">Java 5+</span>
+                    </div>
+
+                    <!-- Syntax Highlighted Code -->
+                    <div class="p-4 font-mono text-xs md:text-sm overflow-x-auto leading-relaxed bg-[#121826] text-slate-200 flex-grow">
+<pre><code><span class="code-keyword">package</span> Enum;
+
+<span class="code-keyword">public enum</span> <span class="code-type">SituacaoAluno</span> {
+    <span class="code-method">APROVADO</span>(<span class="code-string">"Aluno aprovado com sucesso! Boas férias."</span>),
+    <span class="code-method">RECUPERACAO</span>(<span class="code-string">"Aluno em recuperação. Necessário realizar nova avaliação."</span>),
+    <span class="code-method">REPROVADO</span>(<span class="code-string">"Aluno reprovado por média insuficiente."</span>);
+
+    <span class="code-keyword">private final</span> <span class="code-type">String</span> mensagem;
+
+    <span class="code-comment">// Construtor do enum (Sempre privado implicitamente ou explicitamente)</span>
+    <span class="code-type">SituacaoAluno</span>(<span class="code-type">String</span> mensagem) {
+        <span class="code-keyword">this</span>.mensagem = mensagem;
+    }
+
+    <span class="code-keyword">public</span> <span class="code-type">String</span> <span class="code-method">getMensagem</span>() {
+        <span class="code-keyword">return</span> mensagem;
+    }
+
+    <span class="code-comment">// Método estático para definir a situação com base na nota numérica</span>
+    <span class="code-keyword">public static</span> <span class="code-type">SituacaoAluno</span> <span class="code-method">avaliarNota</span>(<span class="code-keyword">double</span> media) {
+        <span class="code-keyword">if</span> (media &gt;= <span class="code-number">7.0</span>) {
+            <span class="code-keyword">return</span> APROVADO;
+        } <span class="code-keyword">else if</span> (media &gt;= <span class="code-number">4.0</span>) {
+            <span class="code-keyword">return</span> RECUPERACAO;
+        } <span class="code-keyword">else</span> {
+            <span class="code-keyword">return</span> REPROVADO;
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Explanation Panel (5 cols) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-3">
+                        <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass-code"></i> Destaques do Código
+                        </h3>
+                        
+                        <div class="space-y-3 text-xs">
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                                <span class="font-bold text-sky-400 font-mono">1. Declaração das Constantes</span>
+                                <p class="text-slate-400">Cada constante passa seu parâmetro direto ao construtor: <code class="text-emerald-400">APROVADO("...")</code>.</p>
+                            </div>
+
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                                <span class="font-bold text-amber-400 font-mono">2. Atributo `final`</span>
+                                <p class="text-slate-400">Como enums são imutáveis, os atributos são marcados como <code class="text-slate-200">private final</code> para garantir a integridade dos dados.</p>
+                            </div>
+
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                                <span class="font-bold text-purple-400 font-mono">3. Construtor Privado</span>
+                                <p class="text-slate-400">O construtor do enum é chamado automaticamente na inicialização da aplicação para cada opção declarada. Nunca usaremos <code class="text-rose-400">new SituacaoAluno()</code>!</p>
+                            </div>
+
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                                <span class="font-bold text-emerald-400 font-mono">4. Método Estático (`avaliarNota`)</span>
+                                <p class="text-slate-400">Encapsula a regra de negócio da escola (cortes <code class="text-amber-300">7.0</code> e <code class="text-amber-300">4.0</code>), retornando diretamente o objeto do Enum correto.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: MAIN CODE (Escola.java) -->
+        <section id="sec-main-code" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Code Viewer (7 cols) -->
+                <div class="lg:col-span-7 bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden flex flex-col">
+                    <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                            <span class="ml-2 text-xs font-mono font-medium text-slate-400">Enum/Escola.java</span>
+                        </div>
+                        <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">Classe Principal</span>
+                    </div>
+
+                    <!-- Syntax Highlighted Code -->
+                    <div class="p-4 font-mono text-xs md:text-sm overflow-x-auto leading-relaxed bg-[#121826] text-slate-200 flex-grow">
+<pre><code><span class="code-keyword">package</span> Enum;
+
+<span class="code-keyword">public class</span> <span class="code-type">Escola</span> {
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(<span class="code-type">String</span>[] args) {
+        <span class="code-keyword">double</span> notaDoAluno = <span class="code-number">5.5</span>; <span class="code-comment">// Exemplo de nota</span>
+
+        <span class="code-comment">// Chamada estática do Enum para obter o estado</span>
+        <span class="code-type">SituacaoAluno</span> situacao = <span class="code-type">SituacaoAluno</span>.<span class="code-method">avaliarNota</span>(notaDoAluno);
+
+        <span class="code-type">System</span>.out.println(<span class="code-string">"Média do aluno: "</span> + notaDoAluno);
+        <span class="code-type">System</span>.out.println(<span class="code-string">"Situação: "</span> + situacao);
+        <span class="code-type">System</span>.out.println(<span class="code-string">"Detalhe: "</span> + situacao.<span class="code-method">getMensagem</span>());
+
+        <span class="code-type">System</span>.out.println(<span class="code-string">"\n--- Ações do Sistema ---"</span>);
+
+        <span class="code-comment">// Utilizando switch para tomar decisões baseadas no enum</span>
+        <span class="code-keyword">switch</span> (situacao) {
+            <span class="code-keyword">case</span> APROVADO:
+                <span class="code-type">System</span>.out.println(<span class="code-string">"&gt;&gt; Emitindo certificado de conclusão..."</span>);
+                <span class="code-keyword">break</span>;
+            <span class="code-keyword">case</span> RECUPERACAO:
+                <span class="code-type">System</span>.out.println(<span class="code-string">"&gt;&gt; Gerando agendamento para a prova substitutiva..."</span>);
+                <span class="code-keyword">break</span>;
+            <span class="code-keyword">case</span> REPROVADO:
+                <span class="code-type">System</span>.out.println(<span class="code-string">"&gt;&gt; Matriculando o aluno na dependência/retenção..."</span>);
+                <span class="code-keyword">break</span>;
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Explanation Panel (5 cols) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-code-branch"></i> Integração e Uso do Switch
+                        </h3>
+                        
+                        <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-xs text-amber-200">
+                            <i class="fa-solid fa-circle-info mr-1 text-amber-400"></i>
+                            <strong>Atenção:</strong> No comando <code class="text-white">switch(situacao)</code>, o Java já sabe o tipo do Enum. Por isso, usa-se apenas <code class="text-amber-300">case APROVADO:</code> em vez de <code class="text-rose-400">case SituacaoAluno.APROVADO:</code>!
+                        </div>
+
+                        <div class="space-y-2 text-xs">
+                            <h4 class="font-bold text-slate-300">Fluxo de Execução:</h4>
+                            <ol class="list-decimal list-inside space-y-2 text-slate-400">
+                                <li class="p-2 bg-slate-950 rounded-lg border border-slate-800">
+                                    <strong class="text-slate-200">Definição:</strong> Guarda a nota <code class="text-amber-300">5.5</code> na variável local.
+                                </li>
+                                <li class="p-2 bg-slate-950 rounded-lg border border-slate-800">
+                                    <strong class="text-slate-200">Avaliação:</strong> Passa a nota para <code class="text-sky-300">SituacaoAluno.avaliarNota(5.5)</code>, que retorna a constante <code class="text-amber-400">RECUPERACAO</code>.
+                                </li>
+                                <li class="p-2 bg-slate-950 rounded-lg border border-slate-800">
+                                    <strong class="text-slate-200">Impressão:</strong> Exibe o nome da constante e a sua mensagem customizada associada.
+                                </li>
+                                <li class="p-2 bg-slate-950 rounded-lg border border-slate-800">
+                                    <strong class="text-slate-200">Ramificação:</strong> O <code class="text-purple-300">switch</code> entra estritamente no bloco correspondente para acionar a ação do sistema.
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: SIMULADOR INTERATIVO -->
+        <section id="sec-simulator" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-play text-amber-500"></i> Executador Interativo de Código Java
+                        </h2>
+                        <p class="text-xs text-slate-400">Insira uma nota para simular como a JVM processa a chamada do Enum em tempo real.</p>
+                    </div>
+
+                    <!-- Input Controls -->
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <div class="relative flex-grow md:flex-grow-0">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs text-slate-500 font-mono">nota =</span>
+                            <input type="number" id="input-nota" min="0" max="10" step="0.5" value="5.5" 
+                                class="w-full md:w-36 bg-slate-950 text-amber-400 font-mono font-bold text-sm pl-16 pr-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-amber-500 transition-colors">
+                        </div>
+                        <button onclick="runSimulation()" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-bold px-5 py-2 rounded-xl text-xs md:text-sm shadow-lg shadow-orange-500/20 active:scale-95 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-bolt"></i> Avaliar Nota
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Dynamic Code Step Execution (7 cols) -->
+                    <div class="lg:col-span-7 bg-slate-950 rounded-xl border border-slate-800 p-4 font-mono text-xs overflow-x-auto space-y-1">
+                        <div class="text-slate-500 mb-2 border-b border-slate-800 pb-1 text-[11px] flex justify-between">
+                            <span>// Linhas de execução na JVM</span>
+                            <span id="step-indicator" class="text-amber-400">Pronto para rodar</span>
+                        </div>
+                        
+                        <div id="line-1" class="code-line p-1 rounded text-slate-400">
+                            <span class="text-slate-600 select-none mr-3">01</span>double notaDoAluno = <span id="code-val-nota" class="text-amber-400 font-bold">5.5</span>;
+                        </div>
+                        <div id="line-2" class="code-line p-1 rounded text-slate-400">
+                            <span class="text-slate-600 select-none mr-3">02</span>SituacaoAluno situacao = SituacaoAluno.avaliarNota(notaDoAluno);
+                        </div>
+                        <div id="line-3" class="code-line p-1 rounded text-slate-400">
+                            <span class="text-slate-600 select-none mr-3">03</span>System.out.println("Média do aluno: " + notaDoAluno);
+                        </div>
+                        <div id="line-4" class="code-line p-1 rounded text-slate-400">
+                            <span class="text-slate-600 select-none mr-3">04</span>System.out.println("Situação: " + situacao);
+                        </div>
+                        <div id="line-5" class="code-line p-1 rounded text-slate-400">
+                            <span class="text-slate-600 select-none mr-3">05</span>System.out.println("Detalhe: " + situacao.getMensagem());
+                        </div>
+                        <div id="line-6" class="code-line p-1 rounded text-slate-400">
+                            <span class="text-slate-600 select-none mr-3">06</span>switch (situacao) { ... }
+                        </div>
+                    </div>
+
+                    <!-- Output & Badge State Panel (5 cols) -->
+                    <div class="lg:col-span-5 space-y-4 flex flex-col justify-between">
+                        <!-- Result Card -->
+                        <div id="result-card" class="bg-slate-950 p-5 rounded-xl border border-slate-800 text-center space-y-3 transition-all">
+                            <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Estado do Enum Gerado</span>
+                            <div id="result-badge-container" class="py-2">
+                                <span id="result-badge" class="px-4 py-2 rounded-xl text-lg font-mono font-bold inline-flex items-center gap-2 bg-slate-800 text-slate-400 border border-slate-700">
+                                    <i class="fa-solid fa-spinner animate-spin"></i> AGUARDANDO
+                                </span>
+                            </div>
+                            <p id="result-msg" class="text-xs text-slate-400 italic">"Clique no botão 'Avaliar Nota' para executar."</p>
+                        </div>
+
+                        <!-- Console Screen -->
+                        <div class="bg-black rounded-xl border border-slate-800 p-4 font-mono text-xs text-slate-300 flex-grow flex flex-col">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2 text-slate-500 text-[11px]">
+                                <span><i class="fa-solid fa-terminal mr-1"></i> Console Output</span>
+                                <span class="text-emerald-500">● Live Terminal</span>
+                            </div>
+                            <div id="console-output" class="space-y-1 text-slate-300 overflow-y-auto max-h-48 leading-relaxed">
+                                <span class="text-slate-600">&gt; Sistema pronto. Informe uma nota...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: RESUMO E VANTAGENS -->
+        <section id="sec-resumo" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Advantage 1 -->
+                <div class="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-xl space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white">Segurança de Tipo (Type Safety)</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Impede erros em tempo de compilação! Se um método espera <code class="text-sky-300">SituacaoAluno</code>, você só pode passar um dos 3 valores do Enum. Nada de números mágicos (ex: <code class="text-rose-400">99</code>) ou textos com erros de digitação (ex: <code class="text-rose-400">"aprovadoo"</code>).
+                    </p>
+                </div>
+
+                <!-- Advantage 2 -->
+                <div class="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-xl space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-box-archive"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white">Encapsulamento e Organização</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        A regra de negócio (média &ge; 7.0 para aprovação) fica centralizada dentro de <code class="text-amber-300">SituacaoAluno.avaliarNota()</code>. Se os critérios mudarem amanhã, você altera em um único arquivo do projeto.
+                    </p>
+                </div>
+
+                <!-- Advantage 3 -->
+                <div class="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-xl space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white">Integração Perfeita com Switch</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        O compilador Java verifica todas as opções no <code class="text-emerald-300">switch(situacao)</code>, permitindo criar rotas de execução limpas, legíveis e sem acoplamento.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
+                <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-table text-amber-400"></i> Comparativo: Constantes Tradicionais vs. ENUM
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-400 uppercase text-[11px] font-mono">
+                                <th class="p-3">Característica</th>
+                                <th class="p-3 text-rose-400">Constantes Antigas (public static final int)</th>
+                                <th class="p-3 text-emerald-400">Java ENUM (Abordagem Moderna)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-slate-300 font-mono">
+                            <tr>
+                                <td class="p-3 font-bold font-sans">Validação de Tipos</td>
+                                <td class="p-3 text-slate-400">Fraca (Aceita qualquer int)</td>
+                                <td class="p-3 text-emerald-400 font-bold">Forte (Aceita apenas valores do Enum)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold font-sans">Comportamento/Métodos</td>
+                                <td class="p-3 text-slate-400">Impossível (Apenas guarda o valor)</td>
+                                <td class="p-3 text-emerald-400">Pode ter métodos, construtores e atributos</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold font-sans">Leitura no Log/Console</td>
+                                <td class="p-3 text-slate-400">Exibe números sem contexto (ex: "1")</td>
+                                <td class="p-3 text-emerald-400">Exibe a constante literal (ex: "APROVADO")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 px-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <span>Aula Interativa de Java &bull; Programação Orientada a Objetos</span>
+            <span class="font-mono text-slate-400">Desenvolvido para Aprendizado de Enum em Java</span>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Tab Switch Logic
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-500', 'text-slate-950', 'shadow');
+                btn.classList.add('text-slate-400');
+            });
+
+            // Show selected tab content
+            const targetContent = document.getElementById('sec-' + tabId);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.classList.add('animate-fade-in');
+            }
+
+            // Activate selected tab button
+            const targetBtn = document.getElementById('tab-' + tabId);
+            if (targetBtn) {
+                targetBtn.classList.add('bg-amber-500', 'text-slate-950', 'shadow');
+                targetBtn.classList.remove('text-slate-400');
+            }
+        }
+
+        // Java Simulator Logic
+        function runSimulation() {
+            const inputVal = parseFloat(document.getElementById('input-nota').value) || 0;
+            document.getElementById('code-val-nota').textContent = inputVal.toFixed(1);
+
+            const consoleOutput = document.getElementById('console-output');
+            const resultBadge = document.getElementById('result-badge');
+            const resultMsg = document.getElementById('result-msg');
+            const resultCard = document.getElementById('result-card');
+            const stepIndicator = document.getElementById('step-indicator');
+
+            // Reset lines active state
+            for(let i = 1; i <= 6; i++) {
+                document.getElementById('line-' + i).classList.remove('active');
+            }
+
+            consoleOutput.innerHTML = '';
+            stepIndicator.textContent = 'Executando...';
+
+            // Step 1: Assign variable
+            setTimeout(() => {
+                document.getElementById('line-1').classList.add('active');
+            }, 100);
+
+            // Step 2: Evaluate Enum
+            setTimeout(() => {
+                document.getElementById('line-1').classList.remove('active');
+                document.getElementById('line-2').classList.add('active');
+
+                // Compute Enum Status
+                let status = '';
+                let msg = '';
+                let action = '';
+                let badgeStyle = '';
+                let borderStyle = '';
+
+                if (inputVal >= 7.0) {
+                    status = 'APROVADO';
+                    msg = 'Aluno aprovado com sucesso! Boas férias.';
+                    action = '>> Emitindo certificado de conclusão...';
+                    badgeStyle = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50';
+                    borderStyle = 'border-emerald-500/40';
+                } else if (inputVal >= 4.0) {
+                    status = 'RECUPERACAO';
+                    msg = 'Aluno em recuperação. Necessário realizar nova avaliação.';
+                    action = '>> Gerando agendamento para a prova substitutiva...';
+                    badgeStyle = 'bg-amber-500/20 text-amber-400 border-amber-500/50';
+                    borderStyle = 'border-amber-500/40';
+                } else {
+                    status = 'REPROVADO';
+                    msg = 'Aluno reprovado por média insuficiente.';
+                    action = '>> Matriculando o aluno na dependência/retenção...';
+                    badgeStyle = 'bg-rose-500/20 text-rose-400 border-rose-500/50';
+                    borderStyle = 'border-rose-500/40';
+                }
+
+                // Update UI Badge
+                resultBadge.className = `px-4 py-2 rounded-xl text-lg font-mono font-bold inline-flex items-center gap-2 border ${badgeStyle} animate-bounce-short`;
+                resultBadge.innerHTML = `<i class="fa-solid fa-certificate"></i> ${status}`;
+                resultMsg.textContent = `"${msg}"`;
+                resultCard.className = `bg-slate-950 p-5 rounded-xl text-center space-y-3 transition-all border ${borderStyle}`;
+
+                // Step 3-5: Print outputs
+                setTimeout(() => {
+                    document.getElementById('line-2').classList.remove('active');
+                    document.getElementById('line-3').classList.add('active');
+                    consoleOutput.innerHTML += `<div>Média do aluno: <span class="text-amber-400">${inputVal.toFixed(1)}</span></div>`;
+                }, 300);
+
+                setTimeout(() => {
+                    document.getElementById('line-3').classList.remove('active');
+                    document.getElementById('line-4').classList.add('active');
+                    consoleOutput.innerHTML += `<div>Situação: <span class="font-bold text-sky-400">${status}</span></div>`;
+                }, 600);
+
+                setTimeout(() => {
+                    document.getElementById('line-4').classList.remove('active');
+                    document.getElementById('line-5').classList.add('active');
+                    consoleOutput.innerHTML += `<div>Detalhe: <span class="text-emerald-400">${msg}</span></div>`;
+                    consoleOutput.innerHTML += `<div class="text-slate-600 mt-1">--- Ações do Sistema ---</div>`;
+                }, 900);
+
+                // Step 6: Switch execution
+                setTimeout(() => {
+                    document.getElementById('line-5').classList.remove('active');
+                    document.getElementById('line-6').classList.add('active');
+                    consoleOutput.innerHTML += `<div class="text-amber-300 font-bold">${action}</div>`;
+                    stepIndicator.textContent = 'Concluído!';
+                }, 1200);
+
+            }, 400);
+        }
+
+        // Initialize simulation on first load
+        window.onload = function() {
+            runSimulation();
+        };
+    </script>
+</body>
+</html>
